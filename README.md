@@ -1,4 +1,4 @@
-# ForgeX
+﻿# ForgeX
 Local-first XRPL EVM execution console with typed `forgeRunId` runs, receipt-gated finalization, and an external-signer-first trust boundary.
 The active architecture keeps the backend as orchestration and persistence, not the default signing root.
 
@@ -6,7 +6,8 @@ The active architecture keeps the backend as orchestration and persistence, not 
 
 ## Live Demo
 
-- Dashboard link: `http://127.0.0.1:3000`
+- Local dashboard: `http://127.0.0.1:3000`
+- Vercel preview: [forgex-jjzb5u6si-zrt219s-projects.vercel.app](https://forgex-jjzb5u6si-zrt219s-projects.vercel.app)
 - Contract explorer link: [ForgeXMessageVault `0x170d...7d57`](https://explorer.testnet.xrplevm.org/address/0x170d2207bf76e11179aa491f958f10767b697d57)
 
 ## What This Is
@@ -21,19 +22,19 @@ There is no broad public API and no arbitrary write relay in the active runtime.
 
 ### Blockchain
 
-- ✅ Deploys `ForgeXRegistry` and `ForgeXMessageVault` on XRPL EVM Testnet
-- ✅ Tracks every deploy and write as a typed run with a `forgeRunId`
-- ✅ Enforces role-based write access, pause control, and replay protection
-- ✅ Registers deployments and finalized runs on-chain for auditability
-- ✅ Treats receipts and chain readbacks as canonical truth
+- Deploys `ForgeXRegistry` and `ForgeXMessageVault` on XRPL EVM Testnet
+- Tracks every deploy and write as a typed run with a `forgeRunId`
+- Enforces role-based write access, pause control, and replay protection
+- Registers deployments and finalized runs on-chain for auditability
+- Treats receipts and chain readbacks as canonical truth
 
 ### Dashboard
 
-- ✅ Runs locally on the operator machine with loopback-only access by default
-- ✅ Shows prepared external-signer commands without pretending they are confirmed
-- ✅ Unlocks explorer and contract actions only after confirmed on-chain state exists
-- ✅ Persists run history and logs for recovery and review
-- ✅ Keeps the visual UI unchanged while tightening truthfulness underneath
+- Runs locally on the operator machine with loopback-only access by default
+- Shows prepared external-signer commands without pretending they are confirmed
+- Unlocks explorer and contract actions only after confirmed on-chain state exists
+- Persists run history and logs for recovery and review
+- Keeps the visual UI unchanged while tightening truthfulness underneath
 
 ## Contract Section
 
@@ -109,15 +110,15 @@ There is no broad public API and no arbitrary write relay in the active runtime.
 
 ```text
 forgex/
-├─ backend/ -> auth, runtime, typed run engine, signer boundary, persistence
-├─ contracts/ -> ForgeXRegistry, ForgeXMessageVault, access control layer
-├─ frontend/ -> terminal UI, state rendering, log stream, operator actions
-├─ script/ -> Foundry deploy script for registry + vault + registration
-├─ test/ -> unit tests and invariant coverage
-├─ docs/ -> security, threat, operations, proof, and case-study material
-├─ broadcast/ -> Foundry broadcast artifacts for reconciliation
-├─ state/ -> SQLite-backed run store and UI runtime state
-└─ cli/ -> local command-line entrypoint
+â”œâ”€ backend/ -> auth, runtime, typed run engine, signer boundary, persistence
+â”œâ”€ contracts/ -> ForgeXRegistry, ForgeXMessageVault, access control layer
+â”œâ”€ frontend/ -> terminal UI, state rendering, log stream, operator actions
+â”œâ”€ script/ -> Foundry deploy script for registry + vault + registration
+â”œâ”€ test/ -> unit tests and invariant coverage
+â”œâ”€ docs/ -> security, threat, operations, proof, and case-study material
+â”œâ”€ broadcast/ -> Foundry broadcast artifacts for reconciliation
+â”œâ”€ state/ -> SQLite-backed run store and UI runtime state
+â””â”€ cli/ -> local command-line entrypoint
 ```
 
 ## Running Locally
@@ -163,7 +164,7 @@ forge snapshot
 
 ## Deploy Section
 
-ForgeX’s active deploy path uses `forge script` because the registry, vault, role grant, and deployment registration are one atomic sequence. `forge create` is not the active production path for this repo.
+ForgeX's active deploy path uses `forge script` because the registry, vault, role grant, and deployment registration are one atomic sequence. `forge create` is not the active production path for this repo.
 
 ### Reset Before Deploy
 
@@ -273,3 +274,4 @@ Legacy stage/batch commands like `getStage`, `batchCount`, `injectBatch`, and `a
 ## License
 
 MIT
+
