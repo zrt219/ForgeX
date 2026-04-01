@@ -139,7 +139,12 @@ function createRuntimeUpdater(terminal) {
       xrpPrice.textContent = "XRP unavailable";
     }
 
-    systemStatus.textContent = state.systemStatus === "degraded" ? "System Degraded" : "System On";
+    systemStatus.textContent =
+      state.systemStatus === "preview"
+        ? "Preview Mode"
+        : state.systemStatus === "degraded"
+          ? "System Degraded"
+          : "System On";
     terminal.setRuntimeStatus(runtimeState);
 
     updateReadinessPill(rpcReady, readiness.networkReady === true, state.systemStatus === "degraded" && !readiness.networkReady);
@@ -164,7 +169,8 @@ async function connectRuntimeStream(updateRuntime) {
 }
 
 async function bootstrap() {
-  await ensureOperatorSession();
+  const session = await ensureOperatorSession();
+  const previewMode = session?.preview === true || session?.mode === "vercel-preview";
 
   const scene = new SceneController({
     root: document.querySelector("#scene-root"),
@@ -181,6 +187,54 @@ async function bootstrap() {
     initialState: DEFAULT_UI_STATE,
     devMode,
     onCommand: async (command) => {
+      if (previewMode) {
+        const previewResult = {
+          success: true,
+          mode: "preview",
+          phase: "prepared",
+          status: "prepared",
+          message: "Vercel preview mode. ForgeX local runtime is unavailable here.",
+          runId: `vercel_preview_${Date.now()}`,
+          command: null,
+          finalOutput: [
+            "ForgeX preview mode",
+            "",
+            "This deployment is a static preview surface.",
+            "Run ForgeX locally to execute real deploys, writes, and chain reconciliation.",
+            "",
+            `Command received: ${command}`
+          ].join("\n"),
+          nextActions: ["Main menu", "Show history"],
+          nextStep: "Run ForgeX locally to execute the real workflow.",
+          actions: {
+            canViewTransaction: false,
+            canOpenContract: false,
+            canOpenReadWrite: false,
+            canCopyAddress: false,
+            canCopyTransaction: false,
+            canCopyCommand: false,
+            canFinalizeDeploy: false,
+            canImportBroadcast: false
+          },
+          explorer: {
+            txUrl: null,
+            addressUrl: null
+          },
+          txHash: null,
+          contractAddress: null,
+          receipt: null,
+          warnings: ["Vercel preview mode is read-only."],
+          errors: []
+        };
+
+        terminal.renderResult(previewResult);
+        terminal.showLogs(true);
+        terminal.setRuntimeStatus("Vercel Preview");
+        terminal.append("system", "Preview mode: local runtime and signer execution are disabled here.");
+        terminal.focusInput();
+        return;
+      }
+
       const commandStartedAt = performance.now();
       let latestResult = null;
       const idempotencyKey = `cmd_${Date.now()}_${Math.random().toString(16).slice(2, 8)}`;
@@ -255,6 +309,11 @@ async function bootstrap() {
     }
   });
 
+  if (previewMode) {
+    terminal.append("system", "Vercel preview mode enabled. Local execution is disabled on this deployment.");
+    terminal.setRuntimeStatus("Vercel Preview");
+  }
+
   renderSocialBar(document.querySelector("#top-social-bar"));
 
   let themeId = DEFAULT_UI_STATE.themeId;
@@ -264,31 +323,35 @@ async function bootstrap() {
   });
 
   const updateRuntime = createRuntimeUpdater(terminal);
-  void connectRuntimeStream(updateRuntime);
+  if (!previewMode) {
+    void connectRuntimeStream(updateRuntime);
+  }
   void readJson("/api/runtime-status").then(updateRuntime).catch(() => {});
   window.setInterval(() => {
     void readJson("/api/runtime-status").then(updateRuntime).catch(() => {});
   }, 15000);
 
-  void readJson("/state/ui")
-    .then((uiState) => {
-      const resolvedTheme = resolveBackgroundId(uiState.themeId || uiState.backgroundId || DEFAULT_BACKGROUND_ID);
-      themeId = resolvedTheme;
-      setTheme(resolvedTheme);
-      scene.setBackground(resolveBackgroundId(uiState.backgroundId || resolvedTheme));
-      terminal.hydrateState(uiState);
-      syncBackgroundButtons();
-    })
-    .catch(() => {});
+  if (!previewMode) {
+    void readJson("/state/ui")
+      .then((uiState) => {
+        const resolvedTheme = resolveBackgroundId(uiState.themeId || uiState.backgroundId || DEFAULT_BACKGROUND_ID);
+        themeId = resolvedTheme;
+        setTheme(resolvedTheme);
+        scene.setBackground(resolveBackgroundId(uiState.backgroundId || resolvedTheme));
+        terminal.hydrateState(uiState);
+        syncBackgroundButtons();
+      })
+      .catch(() => {});
 
-  window.setInterval(() => {
-    void writeJson("/state/ui", {
-      ...terminal.getState(devMode),
-      ...scene.getState(),
-      themeId,
-      updatedAt: new Date().toISOString()
-    }).catch(() => {});
-  }, 1500);
+    window.setInterval(() => {
+      void writeJson("/state/ui", {
+        ...terminal.getState(devMode),
+        ...scene.getState(),
+        themeId,
+        updatedAt: new Date().toISOString()
+      }).catch(() => {});
+    }, 1500);
+  }
 }
 
 bootstrap().catch((caughtError) => {

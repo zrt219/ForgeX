@@ -7,3 +7,5 @@ cache/
 out/
 state/
 docs/executive/*.pdf
+
+.vercel
