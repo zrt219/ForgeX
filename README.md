@@ -7,7 +7,7 @@ The active architecture keeps the backend as orchestration and persistence, not 
 ## Live Demo
 
 - Local dashboard: `http://127.0.0.1:3000`
-- Vercel preview: [forgex-jjzb5u6si-zrt219s-projects.vercel.app](https://forgex-jjzb5u6si-zrt219s-projects.vercel.app)
+- Vercel preview: [forgexapp-zrt219s-projects.vercel.app](https://forgexapp-zrt219s-projects.vercel.app)
 - Contract explorer link: [ForgeXMessageVault `0x170d...7d57`](https://explorer.testnet.xrplevm.org/address/0x170d2207bf76e11179aa491f958f10767b697d57)
 
 ## What This Is
