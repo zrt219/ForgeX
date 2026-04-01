@@ -262,16 +262,17 @@ cast send $CONTRACT "setMessage(string,bytes32)" "hello xrpl" 0xYOUR_RUN_DIGEST 
 
 Legacy stage/batch commands like `getStage`, `batchCount`, `injectBatch`, and `advanceBatch` are not part of the current ForgeX contract surface.
 
-## Coming Soon
+## On-Chain Systems Portfolio
 
-| Priority | Project | Focus |
-| --- | --- | --- |
-| 1 | ISR Network | First expansion target for the execution model |
-| 2 | Operator reliability release | Better recovery, history, and reconciliation flow |
-| 3 | Signer boundary expansion | Broader signer support without losing external-signer-first posture |
-| 4 | XRPL ecosystem readiness | Stronger sponsor-facing proof bundle and demo discipline |
+| Project | Description | Status |
+|---------|-------------|--------|
+| **[ZUC Mine Command Center](https://github.com/zrt219/Zuc-Mine-Command-Center)** | On-chain uranium mining operations dashboard — real-time reserve tracking, miner registry, and contract interaction via a fully frontend-driven command interface | ✅ Live |
+| **[U235 Fuel Cycle](https://github.com/zrt219/-U235-Fuel-Cycle-)** | Nuclear fuel cycle pipeline — uranium ore to enriched fuel rod, deterministic multi-stage processing with full on-chain traceability | ✅ Live |
+| **[ISR Network](https://github.com/zrt219/ISR-Network)** | Intelligence surveillance reconnaissance system — on-chain asset tracking, mission lifecycle state machine, and role-based operator control | ✅ Live |
+| **[Dark Matter Farm](https://github.com/zrt219/Dark-Matter-Farm)** | DeFi yield protocol — experimental high-convexity farming system with custom reward mechanics and on-chain state-driven emissions | ✅ Live |
+---
 
 ## License
 
-MIT
+MIT — see [LICENSE](LICENSE)
 
