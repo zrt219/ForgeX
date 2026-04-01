@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ForgeX</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div id="scene-root" aria-hidden="true"></div>
+    <div id="art-credit" class="art-credit" aria-live="polite">
+      <span class="art-credit-label">Artwork</span>
+      <span id="art-credit-name" class="art-credit-name">Katsushika Hokusai</span>
+    </div>
+    <div id="permanence-overlay" class="overlay" hidden>
+      <div class="overlay-copy">
+        <div class="overlay-brand">ForgeX</div>
+        <div id="permanence-address" class="overlay-address"></div>
+        <div class="overlay-line">is now permanent.</div>
+      </div>
+    </div>
+
+    <main id="terminal" class="terminal-shell">
+      <header id="terminal-header" class="terminal-header">
+        <div class="header-brand">
+          <div class="terminal-title">ForgeX</div>
+          <div class="terminal-subtitle">Execute Permanence.</div>
+        </div>
+        <div class="terminal-meta">
+          <div id="background-controls" class="background-controls" aria-label="Background switcher"></div>
+        </div>
+        <div class="header-sidecar">
+          <nav id="top-social-bar" class="top-social-bar" aria-label="ForgeX links"></nav>
+          <div class="live-status-bar" aria-label="ForgeX system status">
+            <span id="xrp-price" class="status-pill status-pill--market">XRP ...</span>
+            <span id="system-status" class="status-pill">System On</span>
+            <span id="runtime-status" class="status-pill status-pill--primary">ForgeX Ready</span>
+            <div id="readiness-strip" class="readiness-strip" aria-label="Runtime readiness">
+              <span id="rpc-ready" class="micro-pill">RPC</span>
+              <span id="artifact-ready" class="micro-pill">Artifacts</span>
+              <span id="simulation-ready" class="micro-pill">Simulation</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="terminal-watermark" aria-hidden="true">ZRT</div>
+      <section id="result-panel" class="result-panel" hidden></section>
+
+      <section class="log-shell">
+        <div class="log-toolbar">
+          <span class="log-toolbar-label">activity</span>
+          <div class="log-toolbar-actions">
+            <button id="toggle-logs" class="ghost-button" type="button">Hide logs</button>
+            <button id="jump-latest" class="ghost-button" type="button">Jump to latest</button>
+          </div>
+        </div>
+        <section id="terminal-log" class="terminal-log" aria-live="polite"></section>
+      </section>
+
+      <form id="command-form" class="command-form">
+        <div class="command-meta">
+          <label class="command-label" for="command-input">Command</label>
+          <span class="command-brand">ZRT</span>
+        </div>
+        <div class="command-row">
+          <span class="prompt-mark">&gt;</span>
+          <input
+            id="command-input"
+            name="command"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="deploy contract"
+          />
+          <button id="submit-button" type="submit">Run</button>
+        </div>
+      </form>
+
+      <footer class="terminal-footer">
+        <span class="footer-brand">ZRT - github.com/zrt219</span>
+      </footer>
+      <div id="terminal-resize" class="terminal-resize-handle" aria-label="Resize terminal" role="presentation"></div>
+    </main>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

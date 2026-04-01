@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" fill="none">
+  <rect width="1280" height="720" fill="#020304"/>
+  <rect x="96" y="72" width="1088" height="576" fill="#0A0E10" stroke="rgba(255,255,255,0.18)"/>
+  <path d="M0 520L220 420L380 376L500 300L640 196L770 308L900 382L1100 434L1280 500V720H0V520Z" fill="url(#terrain)"/>
+  <path d="M638 202L516 316H764L638 202Z" fill="#D9E8EF" fill-opacity=".82"/>
+  <g opacity=".58" stroke="#82FFF2">
+    <path d="M0 557H1280"/>
+    <path d="M0 591H1280"/>
+    <path d="M0 625H1280"/>
+    <path d="M0 659H1280"/>
+    <path d="M0 693H1280"/>
+    <path d="M160 380V720"/>
+    <path d="M320 345V720"/>
+    <path d="M480 290V720"/>
+    <path d="M640 230V720"/>
+    <path d="M800 302V720"/>
+    <path d="M960 360V720"/>
+    <path d="M1120 420V720"/>
+  </g>
+  <rect x="140" y="126" width="520" height="380" fill="#050708" stroke="rgba(255,255,255,0.12)"/>
+  <text x="176" y="176" fill="#82FFF2" font-family="IBM Plex Mono, monospace" font-size="28">ForgeX Terminal</text>
+  <text x="176" y="222" fill="#F3F6F7" font-family="IBM Plex Mono, monospace" font-size="20">&gt; deploy contract</text>
+  <text x="176" y="264" fill="#F3F6F7" fill-opacity=".75" font-family="IBM Plex Mono, monospace" font-size="18">Compiling 2 files with Solc 0.8.24</text>
+  <text x="176" y="298" fill="#F3F6F7" fill-opacity=".75" font-family="IBM Plex Mono, monospace" font-size="18">Broadcasting deployment transaction</text>
+  <text x="176" y="332" fill="#F3F6F7" fill-opacity=".75" font-family="IBM Plex Mono, monospace" font-size="18">Deployed to 0x1234...5678</text>
+  <defs>
+    <linearGradient id="terrain" x1="640" y1="196" x2="640" y2="720" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D9E8EF"/>
+      <stop offset="0.24" stop-color="#102026"/>
+      <stop offset="1" stop-color="#05080A"/>
+    </linearGradient>
+  </defs>
+</svg>

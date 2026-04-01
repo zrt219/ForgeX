@@ -1,0 +1,13 @@
+[profile.default]
+src = "contracts"
+script = "script"
+out = "out"
+libs = ["lib"]
+solc_version = "0.8.24"
+evm_version = "paris"
+optimizer = true
+optimizer_runs = 200
+fs_permissions = [{ access = "read", path = "./" }]
+
+[rpc_endpoints]
+xrpl = "${XRPL_RPC_URL}"

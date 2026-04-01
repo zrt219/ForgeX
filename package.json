@@ -1,0 +1,24 @@
+{
+  "name": "forgex",
+  "version": "2.0.0",
+  "description": "ForgeX deterministic XRPL execution terminal with layered control and cinematic 3D runtime.",
+  "type": "module",
+  "bin": {
+    "forgex": "./cli/index.js"
+  },
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node backend/server.js",
+    "cli": "node cli/index.js",
+    "benchmark:perf": "node backend/benchmark.js",
+    "audit:system": "node backend/system-audit.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^4.21.2",
+    "three": "^0.176.0"
+  }
+}

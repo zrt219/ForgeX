@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ForgeX Case Study | April 1, 2026</title>
+  <style>
+    @page {
+      size: Letter;
+      margin: 1in;
+    }
+
+    :root {
+      --accent: #1F4E79;
+      --accent-soft: #EAF2F8;
+      --ink: #17202A;
+      --muted: #5D6D7E;
+      --rule: #D6DBDF;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #FFFFFF;
+      color: var(--ink);
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 11pt;
+      line-height: 1.45;
+      padding: 1in;
+      max-width: 8.5in;
+      margin: 0 auto;
+    }
+
+    h1, h2, h3, h4, .label, code, pre, .cover-kicker, .footer {
+      font-family: "Courier New", Courier, monospace;
+    }
+
+    h1, h2, h3 {
+      color: var(--accent);
+      letter-spacing: 0.02em;
+      margin: 0 0 0.3rem 0;
+    }
+
+    h1 {
+      font-size: 24pt;
+      line-height: 1.1;
+    }
+
+    h2 {
+      font-size: 14pt;
+      margin-top: 2rem;
+      padding-top: 0.4rem;
+      border-top: 2px solid var(--accent);
+    }
+
+    h3 {
+      font-size: 11pt;
+      margin-top: 1.2rem;
+      text-transform: uppercase;
+    }
+
+    p, ul, ol, table {
+      margin: 0.6rem 0;
+    }
+
+    ul, ol {
+      padding-left: 1.25rem;
+    }
+
+    .cover {
+      min-height: 7.5in;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      page-break-after: always;
+    }
+
+    .cover-kicker {
+      color: var(--muted);
+      font-size: 10pt;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+    }
+
+    .subtitle {
+      font-size: 13pt;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    .value-prop {
+      font-size: 13pt;
+      color: var(--accent);
+      font-weight: 700;
+      margin: 1rem 0 1.25rem 0;
+    }
+
+    .stack {
+      background: var(--accent-soft);
+      border-left: 4px solid var(--accent);
+      padding: 0.8rem 1rem;
+      margin: 1rem 0;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 0.55rem 1rem;
+      margin-top: 1.25rem;
+    }
+
+    .label {
+      font-size: 10pt;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+
+    .callout {
+      background: var(--accent-soft);
+      border: 1px solid #C7D9EA;
+      padding: 0.85rem 1rem;
+      margin: 1rem 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      page-break-inside: avoid;
+    }
+
+    th, td {
+      border: 1px solid var(--rule);
+      padding: 0.5rem 0.55rem;
+      text-align: left;
+      vertical-align: top;
+      font-size: 10pt;
+    }
+
+    th {
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-family: "Courier New", Courier, monospace;
+      font-weight: 700;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 9.5pt;
+    }
+
+    .footer {
+      margin-top: 2rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      font-size: 9pt;
+      color: var(--muted);
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+  </style>
+</head>
+<body>
+  <section class="cover">
+    <div>
+      <div class="cover-kicker">Case Study | April 1, 2026 | 6:33 AM MDT</div>
+      <h1>ForgeX</h1>
+      <div class="subtitle">Local-First XRPL EVM Execution Framework — Executive-Technical Build Record</div>
+      <div class="value-prop">"ForgeX converts local developer intent into typed, receipt-verified XRPL EVM execution without making the backend the default signing authority."</div>
+      <div class="stack">
+        <strong>Stack:</strong> XRPL EVM Testnet · Solidity 0.8.24 · Foundry 1.6.0-dev · Express · Node.js · SQLite run store · Typed `forgeRunId` execution model
+      </div>
+      <div class="meta-grid">
+        <div class="label">Live URL</div>
+        <div><code>http://127.0.0.1:3000</code></div>
+        <div class="label">Latest Recorded Vault</div>
+        <div><code>0x170d2207bf76e11179aa491f958f10767b697d57</code></div>
+        <div class="label">Latest Recorded Registry</div>
+        <div><code>0x6f97d04b4856aa2782c21e31b14b316b580a6540</code></div>
+        <div class="label">Latest Recorded Deploy Tx</div>
+        <div><code>0x9b6a7aa878df775a0e20e87d15e03cd20a782ba278d89b2515c8a4d74cd19b81</code></div>
+      </div>
+    </div>
+    <div class="callout">
+      <strong>Recorded Try Count:</strong>
+      <ul>
+        <li><strong>32</strong> retained raw deploy script executions from the first recorded artifact on March 22, 2026 at 6:30:21 PM local time through March 24, 2026 at 6:29:34 AM local time, based on <code>broadcast/Deploy.s.sol/1449000/run-*.json</code>.</li>
+        <li><strong>13</strong> typed <code>deploy-message-vault</code> runs were recorded inside the rebuilt ForgeX runtime on March 24, 2026 between 5:28:58 AM and 6:28:36 AM MDT, based on <code>state/forgex-runs.sqlite.json</code>.</li>
+        <li><strong>Attempt 13</strong> was the first end-to-end externally signed run that ForgeX marked <code>confirmed</code>, finalized at 6:30:01 AM MDT.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Executive Summary</h2>
+    <p>
+      ForgeX was built to solve a specific execution-integrity problem in Web3 tooling: developer interfaces routinely look sophisticated while still relying on opaque mutable local state, implicit signer trust, and UI flows that overstate what has actually happened on-chain. ForgeX was rebuilt into a local-first XRPL EVM execution framework that tracks each user action as a typed run, persists those runs durably, and treats chain receipts plus chain readback as canonical truth instead of trusting UI optimism or mutable environment files.
+    </p>
+    <p>
+      The hardest technical constraint was not Solidity syntax or frontend polish. It was reconciling Foundry-native deployment workflows, external signing, and XRPL EVM execution semantics without falling back into the standard anti-pattern of “the backend is the wallet.” That constraint broke ordinary assumptions in multiple places: placeholder signer commands, shell and keystore mismatches between Windows and WSL, multi-transaction deployment scripts, and a frontend that initially collapsed “prepared” into “confirmed.” The engineering work was therefore equal parts protocol surface hardening, state-machine repair, and execution truthfulness.
+    </p>
+    <p>
+      As of April 1, 2026 at 6:33 AM MDT, ForgeX has a successful Foundry proof gate, a successful local runtime audit, a deployed registry and message vault on XRPL EVM testnet, and a verified typed run model that can complete an external-signer deployment through final confirmation. That outcome proves the team can recover a repo from an unsafe backend-signer pattern, harden it into a reviewable architecture, and ship a live chain deployment while documenting every meaningful failure mode encountered along the way.
+    </p>
+  </section>
+
+  <section>
+    <h2>Problem Statement</h2>
+    <p>
+      Web3 execution systems fail most often at the seam between interface, operator intent, and chain truth. Existing tooling is frequently centralized, mutable, and operationally ambiguous: one environment variable can silently change the target contract, one stale artifact can be mistaken for canonical deployment state, and one optimistic UI branch can imply that a contract is “live” before the runtime has any verified address or receipt.
+    </p>
+    <p>
+      ForgeX matters because it targets that seam directly. On-chain deployment state is not merely displayed; it is tied to typed run identifiers, explicit chain ID checks, and a registry-backed Solidity design that turns each validated action into a durable audit event. The system encodes deployment identifiers as <code>bytes32</code> hashes, tracks finalized runs by <code>forgeRunDigest</code>, and emits indexed events for deployment registration and run finalization. That structure enables deterministic auditability: who executed, what contract was targeted, what action hash was finalized, and when that state became permanent.
+    </p>
+    <p>
+      The business value is not “another dApp frontend.” The value is a local operator console that reduces trust ambiguity. Immutability, provenance, and event-driven audit trails are only useful when the off-chain orchestration layer refuses to lie about what it knows. ForgeX’s redesign is significant because it makes that refusal explicit in both the Solidity layer and the execution runtime.
+    </p>
+  </section>
+
+  <section class="page-break">
+    <h2>Solidity Architecture — Deep Technical</h2>
+
+    <h3>Contract Design</h3>
+    <ul>
+      <li><strong>Solidity version:</strong> <code>0.8.24</code>, chosen for current compiler safety defaults, custom-error efficiency, and clean compatibility with Foundry 1.6.0-dev.</li>
+      <li><strong>Dependency strategy:</strong> minimal. Contracts rely on an in-repo access-control layer rather than importing a large framework surface, which reduces bytecode and narrows audit scope.</li>
+      <li><strong>Storage layout:</strong> <code>ForgeXRegistry</code> uses two key mappings, one for <code>DeploymentRecord</code> and one for <code>RunRecord</code>. <code>ForgeXMessageVault</code> stores a single message string, the latest run digest, last executor, and a mapping of consumed run digests.</li>
+      <li><strong>Attack surface considerations:</strong> roles are explicit, replay protection is stateful, and terminal write paths are limited to typed actions rather than arbitrary ABI forwarding.</li>
+    </ul>
+
+    <h3>State Machine</h3>
+    <ul>
+      <li><strong>Deployment identity:</strong> <code>DEPLOYMENT_ID = keccak256(abi.encodePacked(block.chainid, address(this)))</code>, binding identity to chain and deployed address.</li>
+      <li><strong>Run identity:</strong> <code>forgeRunDigest</code> is finalized only once in the registry. Duplicate application reverts.</li>
+      <li><strong>Lifecycle constraint:</strong> writes require executor role and unpaused state; consumed run digests permanently block replay of the same logical write.</li>
+      <li><strong>Terminal conditions:</strong> a finalized run is immutable on-chain; a consumed digest cannot be reused to mutate vault state.</li>
+    </ul>
+
+    <h3>Access Control</h3>
+    <ul>
+      <li><strong>Base layer:</strong> <code>ForgeXAccessManaged</code> grants <code>DEFAULT_ADMIN_ROLE</code>, <code>EXECUTOR_ROLE</code>, and <code>PAUSER_ROLE</code> at construction.</li>
+      <li><strong>Vault write path:</strong> <code>setMessage</code> is restricted to <code>EXECUTOR_ROLE</code> and <code>whenNotPaused</code>.</li>
+      <li><strong>Registry mutation path:</strong> deployment registration and run finalization are both restricted to <code>EXECUTOR_ROLE</code>.</li>
+      <li><strong>Upgradeability decision:</strong> no proxy layer. The code is intentionally non-upgradeable at this stage to keep execution semantics auditable and deterministic.</li>
+    </ul>
+
+    <h3>Custom Errors</h3>
+    <ul>
+      <li><code>ForgeXMissingRole(address account, bytes32 role)</code> — parameterized access failure.</li>
+      <li><code>ForgeXPaused()</code>, <code>ForgeXAlreadyPaused()</code>, <code>ForgeXNotPaused()</code> — explicit pause-state enforcement.</li>
+      <li><code>ForgeXInvalidAddress()</code>, <code>ForgeXDeploymentAlreadyRegistered(bytes32)</code>, <code>ForgeXDeploymentNotFound(bytes32)</code>, <code>ForgeXRunAlreadyFinalized(bytes32)</code> — registry integrity.</li>
+      <li><code>ForgeXEmptyMessage()</code>, <code>ForgeXRunAlreadyApplied(bytes32)</code> — vault payload and replay integrity.</li>
+    </ul>
+    <p class="small">
+      Custom errors were chosen over revert strings for bytecode efficiency and parameterized fault reporting.
+    </p>
+
+    <h3>Events</h3>
+    <ul>
+      <li><code>RoleGranted</code>, <code>RoleRevoked</code>, <code>Paused</code>, <code>Unpaused</code> — operational governance trace.</li>
+      <li><code>DeploymentRegistered(bytes32 indexed deploymentId, address indexed vault, address indexed executor)</code> — indexed deployment discovery and analytics.</li>
+      <li><code>RunFinalized(bytes32 indexed forgeRunDigest, bytes32 indexed deploymentId, address indexed target, address executor, bytes32 actionHash)</code> — deterministic action audit trail.</li>
+      <li><code>MessageUpdated(bytes32 indexed forgeRunDigest, address indexed executor, string message, uint256 timestamp)</code> — vault state mutation trace.</li>
+    </ul>
+
+    <h3>Capacity / Constraint Logic</h3>
+    <ul>
+      <li>Empty messages revert at construction and write time.</li>
+      <li>Duplicate deployment registration reverts.</li>
+      <li>Duplicate run finalization reverts.</li>
+      <li>Duplicate run-digest write application reverts.</li>
+      <li>Paused state blocks both registry writes and vault writes.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Chain / Infrastructure Specifics</h2>
+    <table>
+      <tr>
+        <th>Item</th>
+        <th>Specification</th>
+      </tr>
+      <tr>
+        <td>Chain</td>
+        <td>XRPL EVM Testnet</td>
+      </tr>
+      <tr>
+        <td>Architecture</td>
+        <td>EVM-compatible execution environment</td>
+      </tr>
+      <tr>
+        <td>Chain ID</td>
+        <td><code>1449000</code></td>
+      </tr>
+      <tr>
+        <td>Solidity EVM target</td>
+        <td><code>paris</code>, as configured in <code>foundry.toml</code></td>
+      </tr>
+      <tr>
+        <td>Transaction type</td>
+        <td>Legacy transactions were used explicitly via <code>--legacy</code></td>
+      </tr>
+      <tr>
+        <td>Observed gas pricing</td>
+        <td>Successful March 24 deployment path observed <code>137.5 gwei</code> effective pricing in Foundry output</td>
+      </tr>
+      <tr>
+        <td>RPC endpoint</td>
+        <td><code>https://rpc.testnet.xrplevm.org</code></td>
+      </tr>
+      <tr>
+        <td>Toolchain constraints</td>
+        <td>Foundry keystore location differs between Windows and WSL; Node 20 environments may lack native <code>node:sqlite</code>; frontend and backend must agree on exact status semantics</td>
+      </tr>
+      <tr>
+        <td>Required workarounds</td>
+        <td>Loopback binding, explicit chain ID verification, external-signer command generation, Windows-vs-WSL keystore handling, and truthful prepared-vs-confirmed UI branching</td>
+      </tr>
+    </table>
+  </section>
+
+  <section class="page-break">
+    <h2>Build Log — Debug / Engineering War Diary</h2>
+    <table>
+      <tr>
+        <th>#</th>
+        <th>Issue</th>
+        <th>Root Cause</th>
+        <th>Technical Fix</th>
+        <th>Tries</th>
+        <th>Impact If Missed</th>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td>Unsafe backend-signer execution model</td>
+        <td>The original backend accepted overly broad execution inputs and treated mutable local state as canonical deployment truth.</td>
+        <td>Replaced the generic relay model with typed runs, explicit allowed actions, loopback-only auth, SQLite run persistence, and external-signer-first orchestration.</td>
+        <td>Project reset</td>
+        <td>The system would remain a hot-wallet relay rather than a credible XRPL execution console.</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Node 20 runtime audit failure</td>
+        <td>The local environment did not support <code>node:sqlite</code>, which caused the system audit to fail before backend readiness.</td>
+        <td>Added a compatible run-store fallback so the audit could pass in Node 20 environments.</td>
+        <td>1</td>
+        <td>Every sponsor-grade runtime check would fail in a common local shell.</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Foundry test suite would not compile</td>
+        <td>The repo contained incomplete <code>forge-std</code> assumptions and test imports that did not exist in the local vendored setup.</td>
+        <td>Added a local test base, expanded the minimal cheatcode surface, fixed invariant harness structure, and normalized Solidity formatting/lint issues.</td>
+        <td>4 commands</td>
+        <td>Contract claims would remain architectural assertions rather than validated proofs.</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>Prepared deployments rendered as if already confirmed</td>
+        <td>Frontend logic treated transport success and generic result presence as equivalent to on-chain confirmation.</td>
+        <td>Introduced status-gated rendering, disabled explorer/address actions outside <code>confirmed</code>, and rewrote prepared-state copy.</td>
+        <td>Multiple UI iterations</td>
+        <td>Operators would be shown impossible states: “live” contract actions without verified <code>txHash</code> or <code>contractAddress</code>.</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>External-signer commands contained unusable placeholders</td>
+        <td><code>FORGEX_EXTERNAL_ACCOUNT_ALIAS</code> and <code>FORGEX_EXTERNAL_SENDER_ADDRESS</code> were blank, so the backend emitted literal placeholder strings.</td>
+        <td>Added explicit external signer config support, surfaced missing-field instructions, created the concrete alias <code>forgex-local</code>, and wrote the sender address into <code>.env</code>.</td>
+        <td>12 pre-confirmed typed deploy attempts before attempt 13 confirmed</td>
+        <td>The external flow would remain syntactically displayed but operationally unusable.</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>Windows vs WSL keystore split</td>
+        <td>Foundry keystores were created under Windows, while WSL <code>forge</code> looked for aliases in <code>/home/zrt/.foundry/keystores</code>.</td>
+        <td>Identified the shell-specific keystore boundary and executed the signing flow in the environment that actually contained the alias.</td>
+        <td>2 shell contexts</td>
+        <td>Valid aliases would appear “missing,” blocking signing despite a correct wallet import.</td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td><code>os error 3</code> on deploy script</td>
+        <td>The deploy command was first run from <code>C:\Users\Zhane</code> instead of the ForgeX project root, so Foundry could not resolve <code>script/Deploy.s.sol</code>.</td>
+        <td>Re-ran the command from <code>C:\Users\Zhane\Documents\New project\forgex</code>.</td>
+        <td>1</td>
+        <td>The signing path would appear broken when the real fault was only process working directory.</td>
+      </tr>
+      <tr>
+        <td>8</td>
+        <td>Finalize step confused tx hashes with broadcast paths</td>
+        <td>The deploy script produced four transactions, while ForgeX initially exposed separate “paste tx hash” and “import broadcast” paths without enough operator clarity.</td>
+        <td>Distinguished the two completion modes explicitly and used the latest Foundry broadcast artifact as the safer reconciliation path for multi-tx deploys.</td>
+        <td>2 finalize-path corrections</td>
+        <td>ForgeX could reconcile the wrong transaction or treat a hash as a file path, corrupting operator confidence.</td>
+      </tr>
+    </table>
+
+    <div class="callout">
+      <strong>Evidence-backed try summary:</strong> the project retains <strong>32</strong> raw deploy script artifacts from March 22 through March 24, and the hardened runtime retains <strong>13</strong> typed deploy attempts on March 24 before the first externally signed run reached <code>confirmed</code>.
+    </div>
+  </section>
+
+  <section>
+    <h2>Engineering Principles</h2>
+    <ol>
+      <li><strong>Do not let the UI outrun chain truth.</strong> A prepared command is not a deployed contract, and a successful HTTP response is not a finalized run.</li>
+      <li><strong>Make signing authority explicit.</strong> If the operator signs externally, the runtime must say so and must not silently impersonate that authority.</li>
+      <li><strong>Persist typed execution state, not guessed state.</strong> Use durable run records and canonical deployment records rather than artifact recency or mutable process memory.</li>
+      <li><strong>Assume environments differ.</strong> Windows and WSL keystores, paths, and tool visibility are separate operational surfaces and must be handled deliberately.</li>
+      <li><strong>Favor custom errors and explicit eventing over generic revert strings.</strong> They reduce bytecode cost and improve auditability at the same time.</li>
+      <li><strong>Design the happy path and the recovery path together.</strong> If a prepared run cannot be finalized deterministically, the system is incomplete even if deployment itself succeeds.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Forward Look — Production Architecture</h2>
+    <p>
+      The current ForgeX design is appropriate for local-first review, operator-controlled demos, and serious technical diligence. A production evolution would build on the existing role system rather than replace it. The next hardening steps are straightforward: role administration should move behind a multisig, external signer support should expand beyond Foundry keystore assumptions, and deployment reconciliation should treat broadcast artifacts plus tx-hash imports as first-class, operator-safe completion paths.
+    </p>
+    <p>
+      At the contract layer, the architecture is already aligned with a more serious future. <code>ForgeXRegistry</code> is the correct place to generalize execution provenance across multiple contract templates, and the current run-finalization event model is already suitable for richer analytics, downstream indexing, and stricter operational controls. That makes future additions such as oracle-triggered actions, multi-contract orchestration, or policy-driven execution gates incremental rather than architectural resets.
+    </p>
+    <p>
+      The main production gap is no longer “can this system deploy?” It is “can this system prove and govern its own execution under broader operator and sponsor expectations?” ForgeX now has the right local-first foundation to answer that question with disciplined additions rather than another rewrite.
+    </p>
+  </section>
+
+  <div class="footer">
+      <div>ForgeX Case Study</div>
+      <div>April 1, 2026</div>
+  </div>
+</body>
+</html>
