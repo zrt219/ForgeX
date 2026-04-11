@@ -4,6 +4,95 @@ The active architecture keeps the backend as orchestration and persistence, not 
 
 `XRPL EVM` · `Solidity` · `Contract` · `Foundry` · `MIT`
 
+## Start Here From Scratch
+
+If you forgot the flow, do this exactly.
+
+### PowerShell
+
+```powershell
+cd "C:\Users\Zhane\Documents\New project\forgex"
+npm install
+Copy-Item .env.example .env
+npm run start
+```
+
+### WSL
+
+```bash
+cd "/mnt/c/Users/Zhane/Documents/New project/forgex"
+npm install
+cp .env.example .env
+npm run start
+```
+
+Then open:
+
+```text
+http://127.0.0.1:3000
+```
+
+Choose one signer mode:
+
+### Fastest path: `dev-private-key`
+
+Put this in `.env` if you want ForgeX to deploy directly:
+
+```env
+FORGEX_SIGNER_MODE=dev-private-key
+FORGEX_ALLOW_DEV_SIGNER=1
+PRIVATE_KEY=0xYOUR_TESTNET_PRIVATE_KEY
+FORGEX_HOST=127.0.0.1
+FORGEX_REQUIRE_LOCAL_ONLY=1
+```
+
+Then run:
+
+```text
+deploy contract
+```
+
+ForgeX will prepare and finalize the deployment directly.
+
+### Stricter path: `external`
+
+Put this in `.env` if you want ForgeX to prepare a Foundry command and let you broadcast it yourself:
+
+```env
+FORGEX_SIGNER_MODE=external
+FORGEX_ALLOW_DEV_SIGNER=0
+FORGEX_EXTERNAL_ACCOUNT_ALIAS=forgex-local
+FORGEX_EXTERNAL_SENDER_ADDRESS=0x31A826bB9D5F6087d94CDA31945C1234d061b788
+FORGEX_HOST=127.0.0.1
+FORGEX_REQUIRE_LOCAL_ONLY=1
+```
+
+Then in ForgeX run:
+
+```text
+deploy contract
+```
+
+Copy the prepared command and run it in a second terminal from the ForgeX folder:
+
+```powershell
+forge script script/Deploy.s.sol:DeployScript --rpc-url https://rpc.testnet.xrplevm.org --broadcast --account forgex-local --sender 0x31A826bB9D5F6087d94CDA31945C1234d061b788 --legacy
+```
+
+When Foundry finishes, go back to ForgeX and use:
+
+```text
+import broadcast <forgeRunId>
+```
+
+or:
+
+```text
+finalize deploy <forgeRunId> <txHash>
+```
+
+If ForgeX shows placeholders like `<foundry-account-alias>` or `<operator-address>`, your `.env` is incomplete or ForgeX has not been restarted after editing it.
+
 ## Live Demo
 
 - Local dashboard: `http://127.0.0.1:3000`
