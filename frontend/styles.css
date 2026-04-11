@@ -177,11 +177,10 @@ body.vercel-preview-mode .terminal-shell,
   height: 100vh;
   min-height: 100vh;
   border-radius: 0;
-  border-left: 0;
-  border-right: 0;
-  border-top: 0;
+  border: 0;
   box-shadow: none;
-  backdrop-filter: blur(18px);
+  background: transparent;
+  backdrop-filter: none;
   grid-template-rows: auto auto minmax(0, 1fr) auto auto;
 }
 
@@ -207,9 +206,68 @@ body.vercel-preview-mode .log-shell,
   padding-top: 1rem;
 }
 
+body.vercel-preview-mode .terminal-header,
+body.vercel-preview-mode .result-panel,
+body.vercel-preview-mode .log-shell,
+body.vercel-preview-mode .command-form,
+body.vercel-preview-mode .terminal-footer,
+.terminal-shell.locked-layout .terminal-header,
+.terminal-shell.locked-layout .result-panel,
+.terminal-shell.locked-layout .log-shell,
+.terminal-shell.locked-layout .command-form,
+.terminal-shell.locked-layout .terminal-footer {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(7, 11, 18, 0.36), rgba(7, 11, 18, 0.18));
+  backdrop-filter: blur(12px);
+}
+
+body.vercel-preview-mode .terminal-header,
+.terminal-shell.locked-layout .terminal-header {
+  border-bottom-color: rgba(191, 213, 255, 0.08);
+}
+
+body.vercel-preview-mode .result-panel,
+.terminal-shell.locked-layout .result-panel {
+  align-content: start;
+  max-width: min(760px, calc(100vw - 3.2rem));
+  margin-top: 1.1rem;
+  margin-left: clamp(1rem, 2vw, 1.6rem);
+  border: 1px solid rgba(191, 213, 255, 0.08);
+  border-radius: 24px;
+}
+
+body.vercel-preview-mode .log-shell,
+.terminal-shell.locked-layout .log-shell {
+  align-self: start;
+  width: min(760px, calc(100vw - 3.2rem));
+  margin-top: 1.2rem;
+  margin-left: clamp(1rem, 2vw, 1.6rem);
+  border: 1px solid rgba(191, 213, 255, 0.08);
+  border-radius: 24px;
+}
+
 body.vercel-preview-mode .terminal-log,
 .terminal-shell.locked-layout .terminal-log {
   max-height: none;
+}
+
+body.vercel-preview-mode .command-form,
+.terminal-shell.locked-layout .command-form {
+  margin: 0 clamp(1rem, 2vw, 1.6rem) clamp(1rem, 2vw, 1.2rem);
+  border: 1px solid rgba(191, 213, 255, 0.08);
+  border-radius: 24px;
+}
+
+body.vercel-preview-mode .terminal-footer,
+.terminal-shell.locked-layout .terminal-footer {
+  margin: 0 clamp(1rem, 2vw, 1.6rem) clamp(1rem, 2vw, 1rem);
+  border-radius: 18px;
+}
+
+body.vercel-preview-mode .terminal-watermark,
+.terminal-shell.locked-layout .terminal-watermark {
+  color: rgba(255, 255, 255, 0.05);
 }
 
 body.vercel-preview-mode .terminal-resize-handle,
