@@ -96,7 +96,7 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: var(--scene-image, url("/assets/satta-peak-at-yui.jpg"));
+  background-image: var(--scene-image, url("/frontend/assets/satta-peak-at-yui.jpg"));
   background-repeat: no-repeat;
   pointer-events: none;
 }
@@ -166,6 +166,61 @@ body {
   z-index: 5;
   user-select: none;
   overflow: hidden;
+}
+
+body.vercel-preview-mode .terminal-shell,
+.terminal-shell.locked-layout {
+  inset: 0;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
+  border-radius: 0;
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
+  box-shadow: none;
+  backdrop-filter: blur(18px);
+  grid-template-rows: auto auto minmax(0, 1fr) auto auto;
+}
+
+body.vercel-preview-mode .terminal-header,
+.terminal-shell.locked-layout .terminal-header {
+  cursor: default;
+  padding-top: 1.2rem;
+}
+
+body.vercel-preview-mode .result-panel,
+body.vercel-preview-mode .log-shell,
+body.vercel-preview-mode .command-form,
+body.vercel-preview-mode .terminal-footer,
+.terminal-shell.locked-layout .result-panel,
+.terminal-shell.locked-layout .log-shell,
+.terminal-shell.locked-layout .command-form,
+.terminal-shell.locked-layout .terminal-footer {
+  padding-inline: clamp(1rem, 2vw, 1.6rem);
+}
+
+body.vercel-preview-mode .log-shell,
+.terminal-shell.locked-layout .log-shell {
+  padding-top: 1rem;
+}
+
+body.vercel-preview-mode .terminal-log,
+.terminal-shell.locked-layout .terminal-log {
+  max-height: none;
+}
+
+body.vercel-preview-mode .terminal-resize-handle,
+.terminal-shell.locked-layout .terminal-resize-handle {
+  display: none;
+}
+
+body.vercel-preview-mode .art-credit,
+.terminal-shell.locked-layout ~ .art-credit {
+  right: 20px;
+  bottom: 20px;
 }
 
 .terminal-header,

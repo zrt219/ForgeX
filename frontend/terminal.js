@@ -51,7 +51,7 @@ async function copyToClipboard(value) {
 }
 
 export class TerminalController {
-  constructor({ root, onCommand, initialState, devMode }) {
+  constructor({ root, onCommand, initialState, devMode, lockedLayout = false }) {
     this.root = root;
     this.header = document.querySelector("#terminal-header");
     this.log = document.querySelector("#terminal-log");
@@ -63,6 +63,7 @@ export class TerminalController {
     this.toggleLogsButton = document.querySelector("#toggle-logs");
     this.resizeHandle = document.querySelector("#terminal-resize");
     this.devMode = devMode;
+    this.lockedLayout = lockedLayout;
     this.onCommand = onCommand;
     this.size = {
       width: initialState?.terminal?.width ?? root.offsetWidth,
@@ -82,6 +83,7 @@ export class TerminalController {
     this.statusAnimation = null;
     this.revealTimer = null;
 
+    this.root.classList.toggle("locked-layout", this.lockedLayout);
     this.attachEvents();
     this.applySize(this.size.width, this.size.height);
     this.applyPosition(this.position.x, this.position.y);
@@ -102,70 +104,73 @@ export class TerminalController {
       void this.runTextCommand(value);
     });
 
-    this.header.addEventListener("pointerdown", (event) => {
-      if (event.target instanceof HTMLElement && event.target.closest("button, a")) {
-        return;
-      }
-      if (event.button !== 0) {
-        return;
-      }
-      this.drag = {
-        startX: event.clientX,
-        startY: event.clientY,
-        originX: this.position.x,
-        originY: this.position.y
+    if (!this.lockedLayout) {
+      this.header.addEventListener("pointerdown", (event) => {
+        if (event.target instanceof HTMLElement && event.target.closest("button, a")) {
+          return;
+        }
+        if (event.button !== 0) {
+          return;
+        }
+        this.drag = {
+          startX: event.clientX,
+          startY: event.clientY,
+          originX: this.position.x,
+          originY: this.position.y
+        };
+        this.root.classList.add("dragging");
+        this.header.setPointerCapture(event.pointerId);
+      });
+
+      this.header.addEventListener("pointermove", (event) => {
+        if (!this.drag) {
+          return;
+        }
+        const nextX = this.drag.originX + (event.clientX - this.drag.startX);
+        const nextY = this.drag.originY + (event.clientY - this.drag.startY);
+        this.targetPosition = this.clampPosition(nextX, nextY);
+        this.schedulePosition();
+      });
+
+      this.resizeHandle?.addEventListener("pointerdown", (event) => {
+        if (event.button !== 0) {
+          return;
+        }
+        this.resize = {
+          startX: event.clientX,
+          startY: event.clientY,
+          originWidth: this.size.width,
+          originHeight: this.size.height
+        };
+        this.resizeHandle.setPointerCapture(event.pointerId);
+        event.preventDefault();
+      });
+
+      this.resizeHandle?.addEventListener("pointermove", (event) => {
+        if (!this.resize) {
+          return;
+        }
+        const width = this.resize.originWidth + (event.clientX - this.resize.startX);
+        const height = this.resize.originHeight + (event.clientY - this.resize.startY);
+        this.applySize(width, height);
+        this.applyPosition(this.position.x, this.position.y);
+      });
+
+      const stopDrag = () => {
+        this.drag = null;
+        this.root.classList.remove("dragging");
       };
-      this.root.classList.add("dragging");
-      this.header.setPointerCapture(event.pointerId);
-    });
 
-    this.header.addEventListener("pointermove", (event) => {
-      if (!this.drag) {
-        return;
-      }
-      const nextX = this.drag.originX + (event.clientX - this.drag.startX);
-      const nextY = this.drag.originY + (event.clientY - this.drag.startY);
-      this.targetPosition = this.clampPosition(nextX, nextY);
-      this.schedulePosition();
-    });
-
-    this.resizeHandle?.addEventListener("pointerdown", (event) => {
-      if (event.button !== 0) {
-        return;
-      }
-      this.resize = {
-        startX: event.clientX,
-        startY: event.clientY,
-        originWidth: this.size.width,
-        originHeight: this.size.height
+      const stopResize = () => {
+        this.resize = null;
       };
-      this.resizeHandle.setPointerCapture(event.pointerId);
-      event.preventDefault();
-    });
 
-    this.resizeHandle?.addEventListener("pointermove", (event) => {
-      if (!this.resize) {
-        return;
-      }
-      const width = this.resize.originWidth + (event.clientX - this.resize.startX);
-      const height = this.resize.originHeight + (event.clientY - this.resize.startY);
-      this.applySize(width, height);
-      this.applyPosition(this.position.x, this.position.y);
-    });
+      this.header.addEventListener("pointerup", stopDrag);
+      this.header.addEventListener("pointercancel", stopDrag);
+      this.resizeHandle?.addEventListener("pointerup", stopResize);
+      this.resizeHandle?.addEventListener("pointercancel", stopResize);
+    }
 
-    const stopDrag = () => {
-      this.drag = null;
-      this.root.classList.remove("dragging");
-    };
-
-    const stopResize = () => {
-      this.resize = null;
-    };
-
-    this.header.addEventListener("pointerup", stopDrag);
-    this.header.addEventListener("pointercancel", stopDrag);
-    this.resizeHandle?.addEventListener("pointerup", stopResize);
-    this.resizeHandle?.addEventListener("pointercancel", stopResize);
     window.addEventListener("resize", () => {
       this.applySize(this.size.width, this.size.height);
       const next = this.clampPosition(this.position.x, this.position.y);
@@ -320,12 +325,27 @@ export class TerminalController {
   }
 
   applyPosition(x, y) {
+    if (this.lockedLayout) {
+      this.position = { x: 0, y: 0 };
+      this.root.style.left = "0";
+      this.root.style.top = "0";
+      return;
+    }
     this.position = this.clampPosition(x, y);
     this.root.style.left = `${this.position.x}px`;
     this.root.style.top = `${this.position.y}px`;
   }
 
   applySize(width, height) {
+    if (this.lockedLayout) {
+      this.size = {
+        width: window.innerWidth,
+        height: window.innerHeight
+      };
+      this.root.style.width = "100vw";
+      this.root.style.height = "100vh";
+      return;
+    }
     this.size = this.clampSize(width, height);
     this.root.style.width = `${this.size.width}px`;
     this.root.style.height = `${this.size.height}px`;

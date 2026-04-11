@@ -171,6 +171,7 @@ async function connectRuntimeStream(updateRuntime) {
 async function bootstrap() {
   const session = await ensureOperatorSession();
   const previewMode = session?.preview === true || session?.mode === "vercel-preview";
+  document.body.classList.toggle("vercel-preview-mode", previewMode);
 
   const scene = new SceneController({
     root: document.querySelector("#scene-root"),
@@ -186,6 +187,7 @@ async function bootstrap() {
     root: document.querySelector("#terminal"),
     initialState: DEFAULT_UI_STATE,
     devMode,
+    lockedLayout: previewMode,
     onCommand: async (command) => {
       if (previewMode) {
         const previewResult = {
@@ -355,9 +357,33 @@ async function bootstrap() {
 }
 
 bootstrap().catch((caughtError) => {
+  const message = caughtError instanceof Error ? caughtError.message : String(caughtError);
   const log = document.querySelector("#terminal-log");
-  const entry = document.createElement("div");
-  entry.className = "log-entry error";
-  entry.textContent = caughtError instanceof Error ? caughtError.message : String(caughtError);
-  log?.appendChild(entry);
+
+  if (log) {
+    const entry = document.createElement("div");
+    entry.className = "log-entry error";
+    entry.textContent = message;
+    log.appendChild(entry);
+    return;
+  }
+
+  const fallback = document.createElement("div");
+  fallback.setAttribute(
+    "style",
+    [
+      "position:fixed",
+      "inset:24px",
+      "z-index:9999",
+      "padding:20px",
+      "border:1px solid rgba(255,255,255,0.2)",
+      "border-radius:16px",
+      "background:rgba(6,16,27,0.96)",
+      "color:#eef4ff",
+      "font:14px/1.5 'IBM Plex Mono', Consolas, monospace",
+      "white-space:pre-wrap"
+    ].join(";")
+  );
+  fallback.textContent = `ForgeX failed to boot.\n\n${message}`;
+  document.body.appendChild(fallback);
 });
