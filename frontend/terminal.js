@@ -93,6 +93,45 @@ export class TerminalController {
     window.setTimeout(() => this.focusInput(), 0);
   }
 
+  renderPreviewHero() {
+    this.clearResult();
+    this.resultPanel.hidden = false;
+    this.resultPanel.classList.add("preview-hero");
+
+    const hero = document.createElement("section");
+    hero.className = "preview-hero-card";
+
+    const heading = document.createElement("div");
+    heading.className = "result-heading";
+    heading.textContent = "ForgeX terminal";
+    hero.appendChild(heading);
+
+    const title = document.createElement("div");
+    title.className = "preview-hero-title";
+    title.textContent = "Deploy a contract, set a message, and preview the execution handoff.";
+    hero.appendChild(title);
+
+    const copy = document.createElement("div");
+    copy.className = "preview-hero-copy";
+    copy.textContent =
+      "This deployment is a read-only presentation layer. Use the command dock below to step through the ForgeX flow without local signer access.";
+    hero.appendChild(copy);
+
+    const actions = document.createElement("div");
+    actions.className = "action-row compact";
+    for (const label of ["deploy contract", "get value", "set value hello"]) {
+      actions.appendChild(
+        button(label, () => {
+          this.input.value = label;
+          this.focusInput();
+        }, "action-button secondary")
+      );
+    }
+    hero.appendChild(actions);
+
+    this.resultPanel.appendChild(hero);
+  }
+
   attachEvents() {
     this.form.addEventListener("submit", (event) => {
       event.preventDefault();
@@ -408,6 +447,7 @@ export class TerminalController {
 
     this.resultPanel.hidden = true;
     this.resultPanel.innerHTML = "";
+    this.resultPanel.classList.remove("preview-hero");
   }
 
   showNotice(message) {

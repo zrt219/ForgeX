@@ -230,7 +230,7 @@ async function bootstrap() {
         };
 
         terminal.renderResult(previewResult);
-        terminal.showLogs(true);
+        terminal.showLogs(false);
         terminal.setRuntimeStatus("Vercel Preview");
         terminal.append("system", "Preview mode: local runtime and signer execution are disabled here.");
         terminal.focusInput();
@@ -312,7 +312,8 @@ async function bootstrap() {
   });
 
   if (previewMode) {
-    terminal.append("system", "Vercel preview mode enabled. Local execution is disabled on this deployment.");
+    terminal.renderPreviewHero();
+    terminal.showLogs(false);
     terminal.setRuntimeStatus("Vercel Preview");
   }
 

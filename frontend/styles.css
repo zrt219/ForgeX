@@ -156,95 +156,82 @@ body {
   width: min(580px, calc(100vw - 32px));
   height: min(560px, calc(100vh - 32px));
   min-height: 430px;
+  z-index: 5;
+  user-select: none;
+}
+
+.terminal-panel {
+  position: relative;
   display: grid;
   grid-template-rows: auto auto minmax(110px, 1fr) auto auto;
+  width: 100%;
+  height: 100%;
   background: linear-gradient(180deg, rgba(8, 12, 20, 0.78), rgba(4, 8, 14, 0.88));
   border: 1px solid var(--panel-border);
   border-radius: 20px;
   box-shadow: 0 20px 80px rgba(0, 0, 0, 0.48);
   backdrop-filter: blur(18px);
-  z-index: 5;
-  user-select: none;
   overflow: hidden;
 }
 
 body.vercel-preview-mode .terminal-shell,
 .terminal-shell.locked-layout {
   inset: 0;
-  left: 0;
-  top: 0;
+  left: auto;
+  top: auto;
   width: 100vw;
   height: 100vh;
   min-height: 100vh;
-  border-radius: 0;
-  border: 0;
-  box-shadow: none;
+  display: grid;
+  place-items: center;
+  padding: 24px;
   background: transparent;
   backdrop-filter: none;
-  grid-template-rows: auto auto minmax(0, 1fr) auto auto;
+}
+
+body.vercel-preview-mode .terminal-panel,
+.terminal-shell.locked-layout .terminal-panel {
+  width: min(560px, calc(100vw - 48px));
+  height: auto;
+  min-height: 600px;
+  max-height: min(760px, calc(100vh - 56px));
+  border-radius: 22px;
+  border-color: rgba(191, 213, 255, 0.12);
+  background:
+    linear-gradient(180deg, rgba(7, 11, 18, 0.62), rgba(5, 9, 15, 0.78)),
+    rgba(7, 11, 18, 0.38);
+  box-shadow: 0 24px 120px rgba(0, 0, 0, 0.42);
 }
 
 body.vercel-preview-mode .terminal-header,
 .terminal-shell.locked-layout .terminal-header {
   cursor: default;
-  padding-top: 1.2rem;
+  padding-top: 0.95rem;
+  padding-bottom: 0.75rem;
 }
 
-body.vercel-preview-mode .result-panel,
-body.vercel-preview-mode .log-shell,
-body.vercel-preview-mode .command-form,
-body.vercel-preview-mode .terminal-footer,
-.terminal-shell.locked-layout .result-panel,
-.terminal-shell.locked-layout .log-shell,
-.terminal-shell.locked-layout .command-form,
-.terminal-shell.locked-layout .terminal-footer {
-  padding-inline: clamp(1rem, 2vw, 1.6rem);
+body.vercel-preview-mode .background-controls,
+.terminal-shell.locked-layout .background-controls {
+  width: min(300px, 100%);
+  gap: 0.3rem;
 }
 
-body.vercel-preview-mode .log-shell,
-.terminal-shell.locked-layout .log-shell {
-  padding-top: 1rem;
-}
-
-body.vercel-preview-mode .terminal-header,
-body.vercel-preview-mode .result-panel,
-body.vercel-preview-mode .log-shell,
-body.vercel-preview-mode .command-form,
-body.vercel-preview-mode .terminal-footer,
-.terminal-shell.locked-layout .terminal-header,
-.terminal-shell.locked-layout .result-panel,
-.terminal-shell.locked-layout .log-shell,
-.terminal-shell.locked-layout .command-form,
-.terminal-shell.locked-layout .terminal-footer {
-  position: relative;
-  z-index: 1;
-  background: linear-gradient(180deg, rgba(7, 11, 18, 0.36), rgba(7, 11, 18, 0.18));
-  backdrop-filter: blur(12px);
-}
-
-body.vercel-preview-mode .terminal-header,
-.terminal-shell.locked-layout .terminal-header {
-  border-bottom-color: rgba(191, 213, 255, 0.08);
+body.vercel-preview-mode .background-button,
+.terminal-shell.locked-layout .background-button {
+  min-height: 2.4rem;
+  padding: 0.38rem 0.62rem;
 }
 
 body.vercel-preview-mode .result-panel,
 .terminal-shell.locked-layout .result-panel {
-  align-content: start;
-  max-width: min(760px, calc(100vw - 3.2rem));
-  margin-top: 1.1rem;
-  margin-left: clamp(1rem, 2vw, 1.6rem);
-  border: 1px solid rgba(191, 213, 255, 0.08);
-  border-radius: 24px;
+  padding-top: 0.8rem;
+  padding-bottom: 0.2rem;
 }
 
 body.vercel-preview-mode .log-shell,
 .terminal-shell.locked-layout .log-shell {
-  align-self: start;
-  width: min(760px, calc(100vw - 3.2rem));
-  margin-top: 1.2rem;
-  margin-left: clamp(1rem, 2vw, 1.6rem);
-  border: 1px solid rgba(191, 213, 255, 0.08);
-  border-radius: 24px;
+  padding-top: 0.35rem;
+  border-top: 1px solid rgba(191, 213, 255, 0.08);
 }
 
 body.vercel-preview-mode .terminal-log,
@@ -254,20 +241,21 @@ body.vercel-preview-mode .terminal-log,
 
 body.vercel-preview-mode .command-form,
 .terminal-shell.locked-layout .command-form {
-  margin: 0 clamp(1rem, 2vw, 1.6rem) clamp(1rem, 2vw, 1.2rem);
-  border: 1px solid rgba(191, 213, 255, 0.08);
-  border-radius: 24px;
+  padding-top: 0.55rem;
+  padding-bottom: 0.85rem;
 }
 
 body.vercel-preview-mode .terminal-footer,
 .terminal-shell.locked-layout .terminal-footer {
-  margin: 0 clamp(1rem, 2vw, 1.6rem) clamp(1rem, 2vw, 1rem);
-  border-radius: 18px;
+  padding-top: 0;
+  padding-bottom: 0.8rem;
+  opacity: 0.72;
 }
 
 body.vercel-preview-mode .terminal-watermark,
 .terminal-shell.locked-layout .terminal-watermark {
-  color: rgba(255, 255, 255, 0.05);
+  inset: 72px 0 72px;
+  color: rgba(255, 255, 255, 0.04);
 }
 
 body.vercel-preview-mode .terminal-resize-handle,
@@ -506,6 +494,28 @@ body.vercel-preview-mode .art-credit,
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
 }
 
+.preview-hero-card {
+  display: grid;
+  gap: 0.8rem;
+  padding: 1rem 1.05rem;
+  border-radius: 18px;
+  border: 1px solid rgba(191, 213, 255, 0.12);
+  background: rgba(255, 255, 255, 0.035);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+}
+
+.preview-hero-title {
+  font-size: 1rem;
+  line-height: 1.45;
+  color: var(--accent);
+}
+
+.preview-hero-copy {
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
 .trust-link,
 .trust-line,
 .handoff-text,
@@ -690,6 +700,12 @@ body.vercel-preview-mode .art-credit,
   border: 1px solid rgba(191, 213, 255, 0.1);
 }
 
+body.vercel-preview-mode .command-row,
+.terminal-shell.locked-layout .command-row {
+  background: rgba(255, 255, 255, 0.035);
+  border-color: rgba(191, 213, 255, 0.12);
+}
+
 .prompt-mark {
   color: var(--cold);
 }
@@ -777,6 +793,11 @@ body[data-theme="neon"] .terminal-watermark {
     left: 10px;
     top: 10px;
     min-height: calc(100vh - 20px);
+  }
+
+  .terminal-panel {
+    width: 100%;
+    height: 100%;
   }
 
   .terminal-meta,
