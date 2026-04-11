@@ -4,6 +4,38 @@ The active architecture keeps the backend as orchestration and persistence, not 
 
 `XRPL EVM` · `Solidity` · `Contract` · `Foundry` · `MIT`
 
+## Live Demo
+
+- Local dashboard: `http://127.0.0.1:3000`
+- Vercel preview: [forgexapp-zrt219s-projects.vercel.app](https://forgexapp-zrt219s-projects.vercel.app)
+- Contract explorer link: [ForgeXMessageVault `0x170d...7d57`](https://explorer.testnet.xrplevm.org/address/0x170d2207bf76e11179aa491f958f10767b697d57)
+
+## What This Is
+
+ForgeX is a local operator console for XRPL EVM deploys and writes. It is not a hosted relay and it is not a generic backend that forwards arbitrary contract calls. The active runtime is deliberately constrained: each command becomes a typed run, the runtime persists that run durably, and final state is only considered real after receipt verification and chain readback.
+
+The system is built to keep chain truth separate from UI convenience. That means the dashboard can prepare a deploy command, show logs, and help the operator reconcile a run, but it cannot invent a confirmed address or transaction hash. In practice, that is the difference between an operator console and a polished but misleading mockup.
+
+There is no broad public API and no arbitrary write relay in the active runtime. The backend enforces local-only access, the signer boundary is explicit, and the contracts themselves enforce roles, pause state, replay protection, and deployment registration.
+
+## Features
+
+### Blockchain
+
+- Deploys `ForgeXRegistry` and `ForgeXMessageVault` on XRPL EVM Testnet
+- Tracks every deploy and write as a typed run with a `forgeRunId`
+- Enforces role-based write access, pause control, and replay protection
+- Registers deployments and finalized runs on-chain for auditability
+- Treats receipts and chain readbacks as canonical truth
+
+### Dashboard
+
+- Runs locally on the operator machine with loopback-only access by default
+- Shows prepared external-signer commands without pretending they are confirmed
+- Unlocks explorer and contract actions only after confirmed on-chain state exists
+- Persists run history and logs for recovery and review
+- Keeps the visual UI unchanged while tightening truthfulness underneath
+
 ## Start Here From Scratch
 
 If you forgot the flow, do this exactly.
@@ -11,7 +43,7 @@ If you forgot the flow, do this exactly.
 ### PowerShell
 
 ```powershell
-cd "C:\Users\Zhane\Documents\New project\forgex"
+cd "$env:USERPROFILE\Documents\New project\forgex"
 npm install
 Copy-Item .env.example .env
 npm run start
@@ -20,7 +52,7 @@ npm run start
 ### WSL
 
 ```bash
-cd "/mnt/c/Users/Zhane/Documents/New project/forgex"
+cd "/mnt/c/Users/<YOUR_WINDOWS_USER>/Documents/New project/forgex"
 npm install
 cp .env.example .env
 npm run start
@@ -62,7 +94,7 @@ Put this in `.env` if you want ForgeX to prepare a Foundry command and let you b
 FORGEX_SIGNER_MODE=external
 FORGEX_ALLOW_DEV_SIGNER=0
 FORGEX_EXTERNAL_ACCOUNT_ALIAS=forgex-local
-FORGEX_EXTERNAL_SENDER_ADDRESS=0x31A826bB9D5F6087d94CDA31945C1234d061b788
+FORGEX_EXTERNAL_SENDER_ADDRESS=0xYOUR_WALLET_ADDRESS
 FORGEX_HOST=127.0.0.1
 FORGEX_REQUIRE_LOCAL_ONLY=1
 ```
@@ -76,7 +108,7 @@ deploy contract
 Copy the prepared command and run it in a second terminal from the ForgeX folder:
 
 ```powershell
-forge script script/Deploy.s.sol:DeployScript --rpc-url https://rpc.testnet.xrplevm.org --broadcast --account forgex-local --sender 0x31A826bB9D5F6087d94CDA31945C1234d061b788 --legacy
+forge script script/Deploy.s.sol:DeployScript --rpc-url https://rpc.testnet.xrplevm.org --broadcast --account forgex-local --sender 0xYOUR_WALLET_ADDRESS --legacy
 ```
 
 When Foundry finishes, go back to ForgeX and use:
@@ -92,38 +124,6 @@ finalize deploy <forgeRunId> <txHash>
 ```
 
 If ForgeX shows placeholders like `<foundry-account-alias>` or `<operator-address>`, your `.env` is incomplete or ForgeX has not been restarted after editing it.
-
-## Live Demo
-
-- Local dashboard: `http://127.0.0.1:3000`
-- Vercel preview: [forgexapp-zrt219s-projects.vercel.app](https://forgexapp-zrt219s-projects.vercel.app)
-- Contract explorer link: [ForgeXMessageVault `0x170d...7d57`](https://explorer.testnet.xrplevm.org/address/0x170d2207bf76e11179aa491f958f10767b697d57)
-
-## What This Is
-
-ForgeX is a local operator console for XRPL EVM deploys and writes. It is not a hosted relay and it is not a generic backend that forwards arbitrary contract calls. The active runtime is deliberately constrained: each command becomes a typed run, the runtime persists that run durably, and final state is only considered real after receipt verification and chain readback.
-
-The system is built to keep chain truth separate from UI convenience. That means the dashboard can prepare a deploy command, show logs, and help the operator reconcile a run, but it cannot invent a confirmed address or transaction hash. In practice, that is the difference between an operator console and a polished but misleading mockup.
-
-There is no broad public API and no arbitrary write relay in the active runtime. The backend enforces local-only access, the signer boundary is explicit, and the contracts themselves enforce roles, pause state, replay protection, and deployment registration.
-
-## Features
-
-### Blockchain
-
-- Deploys `ForgeXRegistry` and `ForgeXMessageVault` on XRPL EVM Testnet
-- Tracks every deploy and write as a typed run with a `forgeRunId`
-- Enforces role-based write access, pause control, and replay protection
-- Registers deployments and finalized runs on-chain for auditability
-- Treats receipts and chain readbacks as canonical truth
-
-### Dashboard
-
-- Runs locally on the operator machine with loopback-only access by default
-- Shows prepared external-signer commands without pretending they are confirmed
-- Unlocks explorer and contract actions only after confirmed on-chain state exists
-- Persists run history and logs for recovery and review
-- Keeps the visual UI unchanged while tightening truthfulness underneath
 
 ## Contract Section
 
@@ -217,7 +217,7 @@ The frontend is served by the backend, so there is no separate frontend install 
 ### PowerShell
 
 ```powershell
-cd "C:\Users\Zhane\Documents\New project\forgex"
+cd "$env:USERPROFILE\Documents\New project\forgex"
 npm install
 Copy-Item .env.example .env
 npm run start
@@ -226,7 +226,7 @@ npm run start
 ### WSL
 
 ```bash
-cd "/mnt/c/Users/Zhane/Documents/New project/forgex"
+cd "/mnt/c/Users/<YOUR_WINDOWS_USER>/Documents/New project/forgex"
 npm install
 cp .env.example .env
 npm run start

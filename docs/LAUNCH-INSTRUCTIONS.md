@@ -9,13 +9,13 @@ If you just want to open ForgeX and make it work, do these steps in order.
 ### PowerShell
 
 ```powershell
-cd "C:\Users\Zhane\Documents\New project\forgex"
+cd "$env:USERPROFILE\Documents\New project\forgex"
 ```
 
 ### WSL
 
 ```bash
-cd "/mnt/c/Users/Zhane/Documents/New project/forgex"
+cd "/mnt/c/Users/<YOUR_WINDOWS_USER>/Documents/New project/forgex"
 ```
 
 If you are not inside the ForgeX folder, commands like `forge script script/Deploy.s.sol:DeployScript` will fail.
@@ -177,7 +177,7 @@ Run that command in the same terminal environment where your Foundry alias exist
 Example:
 
 ```powershell
-cd "C:\Users\Zhane\Documents\New project\forgex"
+cd "$env:USERPROFILE\Documents\New project\forgex"
 forge script script/Deploy.s.sol:DeployScript --rpc-url https://rpc.testnet.xrplevm.org --broadcast --account your_alias --sender 0xYourWalletAddress --legacy
 ```
 
@@ -189,13 +189,13 @@ After it succeeds, go back to ForgeX and do one of these:
 ### Windows broadcast path
 
 ```text
-C:\Users\Zhane\Documents\New project\forgex\broadcast\Deploy.s.sol\1449000\run-latest.json
+C:\Users\<YOUR_WINDOWS_USER>\Documents\New project\forgex\broadcast\Deploy.s.sol\1449000\run-latest.json
 ```
 
 ### WSL broadcast path
 
 ```text
-/mnt/c/Users/Zhane/Documents/New project/forgex/broadcast/Deploy.s.sol/1449000/run-latest.json
+/mnt/c/Users/<YOUR_WINDOWS_USER>/Documents/New project/forgex/broadcast/Deploy.s.sol/1449000/run-latest.json
 ```
 
 If the deploy script created multiple transactions, `Import Foundry broadcast` is usually the safer choice.
@@ -233,13 +233,13 @@ Fix:
 ### PowerShell
 
 ```powershell
-cd "C:\Users\Zhane\Documents\New project\forgex"
+cd "$env:USERPROFILE\Documents\New project\forgex"
 ```
 
 ### WSL
 
 ```bash
-cd "/mnt/c/Users/Zhane/Documents/New project/forgex"
+cd "/mnt/c/Users/<YOUR_WINDOWS_USER>/Documents/New project/forgex"
 ```
 
 ### "Keystore file does not exist"

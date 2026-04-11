@@ -9,13 +9,13 @@ If you want ForgeX running fast, do this.
 ### PowerShell
 
 ```powershell
-cd "C:\Users\Zhane\Documents\New project\forgex"
+cd "$env:USERPROFILE\Documents\New project\forgex"
 ```
 
 ### WSL
 
 ```bash
-cd "/mnt/c/Users/Zhane/Documents/New project/forgex"
+cd "/mnt/c/Users/<YOUR_WINDOWS_USER>/Documents/New project/forgex"
 ```
 
 ## 2. Install packages
