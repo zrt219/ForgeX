@@ -51,7 +51,7 @@ async function copyToClipboard(value) {
 }
 
 export class TerminalController {
-  constructor({ root, onCommand, initialState, devMode, lockedLayout = false }) {
+  constructor({ root, onCommand, initialState, devMode, previewMode = false, lockedLayout = false }) {
     this.root = root;
     this.header = document.querySelector("#terminal-header");
     this.log = document.querySelector("#terminal-log");
@@ -63,15 +63,17 @@ export class TerminalController {
     this.toggleLogsButton = document.querySelector("#toggle-logs");
     this.resizeHandle = document.querySelector("#terminal-resize");
     this.devMode = devMode;
+    this.previewMode = previewMode;
     this.lockedLayout = lockedLayout;
     this.onCommand = onCommand;
+    const defaultPreviewSize = this.previewMode ? this.getDefaultPreviewSize() : null;
     this.size = {
-      width: initialState?.terminal?.width ?? root.offsetWidth,
-      height: initialState?.terminal?.height ?? root.offsetHeight
+      width: initialState?.terminal?.width ?? defaultPreviewSize?.width ?? root.offsetWidth,
+      height: initialState?.terminal?.height ?? defaultPreviewSize?.height ?? root.offsetHeight
     };
     this.position = {
-      x: initialState?.terminal?.x ?? root.offsetLeft,
-      y: initialState?.terminal?.y ?? root.offsetTop
+      x: initialState?.terminal?.x ?? (this.previewMode ? Math.round((window.innerWidth - this.size.width) / 2) : root.offsetLeft),
+      y: initialState?.terminal?.y ?? (this.previewMode ? Math.round((window.innerHeight - this.size.height) / 2) : root.offsetTop)
     };
     this.targetPosition = { ...this.position };
     this.drag = null;
@@ -87,10 +89,19 @@ export class TerminalController {
     this.attachEvents();
     this.applySize(this.size.width, this.size.height);
     this.applyPosition(this.position.x, this.position.y);
-    this.append("system", "Running ForgeX...");
-    this.append("system", "Try: deploy contract");
+    if (!this.previewMode) {
+      this.append("system", "Running ForgeX...");
+      this.append("system", "Try: deploy contract");
+    }
     this.setRuntimeStatus("ForgeX Ready");
     window.setTimeout(() => this.focusInput(), 0);
+  }
+
+  getDefaultPreviewSize() {
+    return {
+      width: Math.min(540, Math.max(360, window.innerWidth - 40)),
+      height: Math.min(680, Math.max(500, window.innerHeight - 40))
+    };
   }
 
   renderPreviewHero() {
@@ -143,72 +154,70 @@ export class TerminalController {
       void this.runTextCommand(value);
     });
 
-    if (!this.lockedLayout) {
-      this.header.addEventListener("pointerdown", (event) => {
-        if (event.target instanceof HTMLElement && event.target.closest("button, a")) {
-          return;
-        }
-        if (event.button !== 0) {
-          return;
-        }
-        this.drag = {
-          startX: event.clientX,
-          startY: event.clientY,
-          originX: this.position.x,
-          originY: this.position.y
-        };
-        this.root.classList.add("dragging");
-        this.header.setPointerCapture(event.pointerId);
-      });
-
-      this.header.addEventListener("pointermove", (event) => {
-        if (!this.drag) {
-          return;
-        }
-        const nextX = this.drag.originX + (event.clientX - this.drag.startX);
-        const nextY = this.drag.originY + (event.clientY - this.drag.startY);
-        this.targetPosition = this.clampPosition(nextX, nextY);
-        this.schedulePosition();
-      });
-
-      this.resizeHandle?.addEventListener("pointerdown", (event) => {
-        if (event.button !== 0) {
-          return;
-        }
-        this.resize = {
-          startX: event.clientX,
-          startY: event.clientY,
-          originWidth: this.size.width,
-          originHeight: this.size.height
-        };
-        this.resizeHandle.setPointerCapture(event.pointerId);
-        event.preventDefault();
-      });
-
-      this.resizeHandle?.addEventListener("pointermove", (event) => {
-        if (!this.resize) {
-          return;
-        }
-        const width = this.resize.originWidth + (event.clientX - this.resize.startX);
-        const height = this.resize.originHeight + (event.clientY - this.resize.startY);
-        this.applySize(width, height);
-        this.applyPosition(this.position.x, this.position.y);
-      });
-
-      const stopDrag = () => {
-        this.drag = null;
-        this.root.classList.remove("dragging");
+    this.header.addEventListener("pointerdown", (event) => {
+      if (event.target instanceof HTMLElement && event.target.closest("button, a")) {
+        return;
+      }
+      if (event.button !== 0) {
+        return;
+      }
+      this.drag = {
+        startX: event.clientX,
+        startY: event.clientY,
+        originX: this.position.x,
+        originY: this.position.y
       };
+      this.root.classList.add("dragging");
+      this.header.setPointerCapture(event.pointerId);
+    });
 
-      const stopResize = () => {
-        this.resize = null;
+    this.header.addEventListener("pointermove", (event) => {
+      if (!this.drag) {
+        return;
+      }
+      const nextX = this.drag.originX + (event.clientX - this.drag.startX);
+      const nextY = this.drag.originY + (event.clientY - this.drag.startY);
+      this.targetPosition = this.clampPosition(nextX, nextY);
+      this.schedulePosition();
+    });
+
+    this.resizeHandle?.addEventListener("pointerdown", (event) => {
+      if (event.button !== 0) {
+        return;
+      }
+      this.resize = {
+        startX: event.clientX,
+        startY: event.clientY,
+        originWidth: this.size.width,
+        originHeight: this.size.height
       };
+      this.resizeHandle.setPointerCapture(event.pointerId);
+      event.preventDefault();
+    });
 
-      this.header.addEventListener("pointerup", stopDrag);
-      this.header.addEventListener("pointercancel", stopDrag);
-      this.resizeHandle?.addEventListener("pointerup", stopResize);
-      this.resizeHandle?.addEventListener("pointercancel", stopResize);
-    }
+    this.resizeHandle?.addEventListener("pointermove", (event) => {
+      if (!this.resize) {
+        return;
+      }
+      const width = this.resize.originWidth + (event.clientX - this.resize.startX);
+      const height = this.resize.originHeight + (event.clientY - this.resize.startY);
+      this.applySize(width, height);
+      this.applyPosition(this.position.x, this.position.y);
+    });
+
+    const stopDrag = () => {
+      this.drag = null;
+      this.root.classList.remove("dragging");
+    };
+
+    const stopResize = () => {
+      this.resize = null;
+    };
+
+    this.header.addEventListener("pointerup", stopDrag);
+    this.header.addEventListener("pointercancel", stopDrag);
+    this.resizeHandle?.addEventListener("pointerup", stopResize);
+    this.resizeHandle?.addEventListener("pointercancel", stopResize);
 
     window.addEventListener("resize", () => {
       this.applySize(this.size.width, this.size.height);
@@ -233,14 +242,21 @@ export class TerminalController {
   }
 
   async runTextCommand(value) {
-    this.beginRun(value);
+    this.beginRun(value, { quiet: this.previewMode });
     await this.onCommand(value);
   }
 
-  beginRun(command) {
-    this.showLogs(true);
+  beginRun(command, { quiet = false } = {}) {
     this.clearResult();
     this.stageMessages.clear();
+    if (quiet) {
+      this.showLogs(false);
+      this.setRuntimeStatus("Previewing command");
+      this.focusInput();
+      return;
+    }
+
+    this.showLogs(true);
     this.append("command", `> ${command}`);
     this.appendStage("Running ForgeX...");
     this.appendStage("Checking environment...");
@@ -364,27 +380,12 @@ export class TerminalController {
   }
 
   applyPosition(x, y) {
-    if (this.lockedLayout) {
-      this.position = { x: 0, y: 0 };
-      this.root.style.left = "0";
-      this.root.style.top = "0";
-      return;
-    }
     this.position = this.clampPosition(x, y);
     this.root.style.left = `${this.position.x}px`;
     this.root.style.top = `${this.position.y}px`;
   }
 
   applySize(width, height) {
-    if (this.lockedLayout) {
-      this.size = {
-        width: window.innerWidth,
-        height: window.innerHeight
-      };
-      this.root.style.width = "100vw";
-      this.root.style.height = "100vh";
-      return;
-    }
     this.size = this.clampSize(width, height);
     this.root.style.width = `${this.size.width}px`;
     this.root.style.height = `${this.size.height}px`;
@@ -448,6 +449,7 @@ export class TerminalController {
     this.resultPanel.hidden = true;
     this.resultPanel.innerHTML = "";
     this.resultPanel.classList.remove("preview-hero");
+    this.resultPanel.classList.remove("preview-result");
   }
 
   showNotice(message) {
@@ -647,6 +649,76 @@ export class TerminalController {
     container.appendChild(row);
 
     return container;
+  }
+
+  renderPreviewResult({ title, copy, highlights = [], nextActions = [] }) {
+    this.clearResult();
+    this.resultPanel.hidden = false;
+    this.resultPanel.classList.add("preview-result");
+
+    const card = document.createElement("section");
+    card.className = "preview-result-card";
+
+    const heading = document.createElement("div");
+    heading.className = "result-heading";
+    heading.textContent = "Preview handoff";
+    card.appendChild(heading);
+
+    const titleElement = document.createElement("div");
+    titleElement.className = "preview-result-title";
+    titleElement.textContent = title;
+    card.appendChild(titleElement);
+
+    const copyElement = document.createElement("div");
+    copyElement.className = "preview-result-copy";
+    copyElement.textContent = copy;
+    card.appendChild(copyElement);
+
+    if (highlights.length) {
+      const grid = document.createElement("div");
+      grid.className = "preview-summary-grid";
+
+      for (const item of highlights) {
+        const block = document.createElement("div");
+        block.className = "preview-summary-item";
+
+        const label = document.createElement("div");
+        label.className = "result-heading";
+        label.textContent = item.label;
+        block.appendChild(label);
+
+        const value = document.createElement("div");
+        value.className = "preview-summary-value";
+        value.textContent = item.value;
+        block.appendChild(value);
+
+        grid.appendChild(block);
+      }
+
+      card.appendChild(grid);
+    }
+
+    this.resultPanel.appendChild(card);
+
+    if (nextActions.length) {
+      const container = document.createElement("section");
+      container.className = "next-actions";
+
+      const heading = document.createElement("div");
+      heading.className = "result-heading";
+      heading.textContent = "What next?";
+      container.appendChild(heading);
+
+      const row = document.createElement("div");
+      row.className = "action-row";
+      for (const label of nextActions) {
+        if (NEXT_ACTION_COMMANDS[label]) {
+          row.appendChild(button(label, () => void this.executeNextAction(label), "action-button"));
+        }
+      }
+      container.appendChild(row);
+      this.resultPanel.appendChild(container);
+    }
   }
 
   renderResult(result) {

@@ -157,15 +157,19 @@ body {
   height: min(560px, calc(100vh - 32px));
   min-height: 430px;
   z-index: 5;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto auto;
+  gap: 12px;
   user-select: none;
 }
 
 .terminal-panel {
   position: relative;
   display: grid;
-  grid-template-rows: auto auto minmax(110px, 1fr) auto auto;
+  grid-template-rows: auto auto minmax(90px, 1fr);
   width: 100%;
   height: 100%;
+  min-height: 0;
   background: linear-gradient(180deg, rgba(8, 12, 20, 0.78), rgba(4, 8, 14, 0.88));
   border: 1px solid var(--panel-border);
   border-radius: 20px;
@@ -176,61 +180,60 @@ body {
 
 body.vercel-preview-mode .terminal-shell,
 .terminal-shell.locked-layout {
-  inset: 0;
-  left: auto;
-  top: auto;
-  width: 100vw;
-  height: 100vh;
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-  padding: 24px;
+  left: calc(50vw - 270px);
+  top: calc(50vh - 320px);
+  width: min(540px, calc(100vw - 40px));
+  height: min(680px, calc(100vh - 40px));
+  min-height: min(680px, calc(100vh - 40px));
   background: transparent;
   backdrop-filter: none;
 }
 
 body.vercel-preview-mode .terminal-panel,
 .terminal-shell.locked-layout .terminal-panel {
-  width: min(560px, calc(100vw - 48px));
-  height: auto;
-  min-height: 600px;
-  max-height: min(760px, calc(100vh - 56px));
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  max-height: none;
+  overflow-y: auto;
+  overflow-x: hidden;
   border-radius: 22px;
   border-color: rgba(191, 213, 255, 0.12);
   background:
-    linear-gradient(180deg, rgba(7, 11, 18, 0.62), rgba(5, 9, 15, 0.78)),
+    linear-gradient(180deg, rgba(7, 11, 18, 0.54), rgba(5, 9, 15, 0.72)),
     rgba(7, 11, 18, 0.38);
-  box-shadow: 0 24px 120px rgba(0, 0, 0, 0.42);
+  box-shadow: 0 24px 120px rgba(0, 0, 0, 0.34);
 }
 
 body.vercel-preview-mode .terminal-header,
 .terminal-shell.locked-layout .terminal-header {
-  cursor: default;
   padding-top: 0.95rem;
-  padding-bottom: 0.75rem;
+  padding-bottom: 0.7rem;
 }
 
 body.vercel-preview-mode .background-controls,
 .terminal-shell.locked-layout .background-controls {
-  width: min(300px, 100%);
-  gap: 0.3rem;
+  width: auto;
+  grid-template-columns: repeat(4, minmax(0, auto));
+  gap: 0.26rem;
 }
 
 body.vercel-preview-mode .background-button,
 .terminal-shell.locked-layout .background-button {
-  min-height: 2.4rem;
-  padding: 0.38rem 0.62rem;
+  min-height: 0;
+  padding: 0.34rem 0.52rem;
+  border-radius: 999px;
 }
 
 body.vercel-preview-mode .result-panel,
 .terminal-shell.locked-layout .result-panel {
   padding-top: 0.8rem;
-  padding-bottom: 0.2rem;
+  padding-bottom: 0.85rem;
 }
 
 body.vercel-preview-mode .log-shell,
 .terminal-shell.locked-layout .log-shell {
-  padding-top: 0.35rem;
+  padding-top: 0.15rem;
   border-top: 1px solid rgba(191, 213, 255, 0.08);
 }
 
@@ -241,15 +244,18 @@ body.vercel-preview-mode .terminal-log,
 
 body.vercel-preview-mode .command-form,
 .terminal-shell.locked-layout .command-form {
-  padding-top: 0.55rem;
-  padding-bottom: 0.85rem;
+  width: 100%;
+  padding: 0.78rem 0.9rem 0.92rem;
+  border-radius: 20px;
+  border: 1px solid rgba(191, 213, 255, 0.12);
+  background: rgba(7, 11, 18, 0.5);
+  box-shadow: 0 18px 80px rgba(0, 0, 0, 0.26);
+  backdrop-filter: blur(18px);
 }
 
 body.vercel-preview-mode .terminal-footer,
 .terminal-shell.locked-layout .terminal-footer {
-  padding-top: 0;
-  padding-bottom: 0.8rem;
-  opacity: 0.72;
+  display: none;
 }
 
 body.vercel-preview-mode .terminal-watermark,
@@ -260,7 +266,7 @@ body.vercel-preview-mode .terminal-watermark,
 
 body.vercel-preview-mode .terminal-resize-handle,
 .terminal-shell.locked-layout .terminal-resize-handle {
-  display: none;
+  display: block;
 }
 
 body.vercel-preview-mode .art-credit,
@@ -269,11 +275,35 @@ body.vercel-preview-mode .art-credit,
   bottom: 20px;
 }
 
+body.vercel-preview-mode .top-social-bar,
+.terminal-shell.locked-layout .top-social-bar,
+body.vercel-preview-mode #xrp-price,
+.terminal-shell.locked-layout #xrp-price,
+body.vercel-preview-mode #system-status,
+.terminal-shell.locked-layout #system-status,
+body.vercel-preview-mode .readiness-strip,
+.terminal-shell.locked-layout .readiness-strip {
+  display: none;
+}
+
+body.vercel-preview-mode .header-sidecar,
+.terminal-shell.locked-layout .header-sidecar {
+  justify-items: end;
+}
+
+body.vercel-preview-mode .background-button-note,
+.terminal-shell.locked-layout .background-button-note {
+  display: none;
+}
+
+body.vercel-preview-mode .background-button-label,
+.terminal-shell.locked-layout .background-button-label {
+  font-size: 0.66rem;
+}
+
 .terminal-header,
 .result-panel,
-.log-shell,
-.command-form,
-.terminal-footer {
+.log-shell {
   padding-inline: 1.1rem;
 }
 
@@ -296,7 +326,7 @@ body.vercel-preview-mode .art-credit,
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  justify-content: center;
+  justify-content: flex-end;
   flex: 1;
 }
 
@@ -496,17 +526,17 @@ body.vercel-preview-mode .art-credit,
 
 .preview-hero-card {
   display: grid;
-  gap: 0.8rem;
+  gap: 0.72rem;
   padding: 1rem 1.05rem;
   border-radius: 18px;
   border: 1px solid rgba(191, 213, 255, 0.12);
-  background: rgba(255, 255, 255, 0.035);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  background: rgba(255, 255, 255, 0.025);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
 }
 
 .preview-hero-title {
-  font-size: 1rem;
-  line-height: 1.45;
+  font-size: 1.02rem;
+  line-height: 1.42;
   color: var(--accent);
 }
 
@@ -514,6 +544,46 @@ body.vercel-preview-mode .art-credit,
   font-size: 0.8rem;
   line-height: 1.6;
   color: var(--muted);
+}
+
+.preview-result-card {
+  display: grid;
+  gap: 0.8rem;
+  padding: 1rem 1.05rem;
+  border-radius: 18px;
+  border: 1px solid rgba(191, 213, 255, 0.12);
+  background: rgba(255, 255, 255, 0.028);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+}
+
+.preview-result-title {
+  font-size: 1rem;
+  line-height: 1.42;
+  color: var(--accent);
+}
+
+.preview-result-copy {
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.preview-summary-grid {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.preview-summary-item {
+  display: grid;
+  gap: 0.18rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid rgba(191, 213, 255, 0.08);
+}
+
+.preview-summary-value {
+  color: var(--accent);
+  line-height: 1.45;
+  word-break: break-word;
 }
 
 .trust-link,
@@ -646,7 +716,7 @@ body.vercel-preview-mode .art-credit,
 }
 
 .terminal-shell.logs-collapsed .log-shell {
-  grid-template-rows: auto;
+  display: none;
 }
 
 .log-entry {
@@ -660,10 +730,13 @@ body.vercel-preview-mode .art-credit,
 .log-entry.command { color: var(--accent); }
 
 .command-form {
-  padding-top: 0.9rem;
-  padding-bottom: 1rem;
+  padding: 0.72rem 0.9rem 0.9rem;
   position: relative;
   z-index: 1;
+  border-radius: 18px;
+  border: 1px solid rgba(191, 213, 255, 0.08);
+  background: rgba(7, 11, 18, 0.44);
+  backdrop-filter: blur(16px);
 }
 
 .command-meta {
@@ -695,9 +768,9 @@ body.vercel-preview-mode .art-credit,
   gap: 0.75rem;
   align-items: center;
   padding: 0.85rem 0.95rem;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(191, 213, 255, 0.1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.028);
+  border: 1px solid rgba(191, 213, 255, 0.08);
 }
 
 body.vercel-preview-mode .command-row,
@@ -727,8 +800,9 @@ body.vercel-preview-mode .command-row,
 }
 
 .terminal-footer {
-  padding-top: 0.2rem;
-  padding-bottom: 1rem;
+  padding-inline: 0.9rem;
+  padding-top: 0;
+  padding-bottom: 0.2rem;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -793,6 +867,7 @@ body[data-theme="neon"] .terminal-watermark {
     left: 10px;
     top: 10px;
     min-height: calc(100vh - 20px);
+    grid-template-rows: minmax(0, 1fr) auto;
   }
 
   .terminal-panel {
@@ -802,7 +877,6 @@ body[data-theme="neon"] .terminal-watermark {
 
   .terminal-meta,
   .background-controls,
-  .terminal-footer,
   .header-sidecar,
   .live-status-bar,
   .top-social-bar {
@@ -821,5 +895,32 @@ body[data-theme="neon"] .terminal-watermark {
     justify-items: start;
     justify-content: flex-start;
     align-items: flex-start;
+  }
+
+  .command-form {
+    padding-inline: 0.8rem;
+  }
+}
+
+@media (max-width: 720px), (max-height: 720px) {
+  body.vercel-preview-mode .terminal-shell {
+    left: 10px;
+    top: 10px;
+    width: calc(100vw - 20px);
+    height: calc(100vh - 20px);
+    min-height: calc(100vh - 20px);
+  }
+
+  body.vercel-preview-mode .background-controls {
+    display: none;
+  }
+
+  body.vercel-preview-mode .terminal-header {
+    gap: 0.55rem;
+  }
+
+  body.vercel-preview-mode .preview-hero-card,
+  body.vercel-preview-mode .preview-result-card {
+    padding: 0.9rem;
   }
 }

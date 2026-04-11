@@ -104,6 +104,55 @@ function renderBackgroundControls(container, scene, getActiveId, setActiveId) {
   return sync;
 }
 
+function describePreviewCommand(command) {
+  const normalized = command.trim().toLowerCase();
+  if (normalized.startsWith("deploy")) {
+    return {
+      title: "Deployment handoff prepared",
+      copy: "The preview captured the deploy flow, but signer execution and XRPL broadcast still need the local ForgeX runtime.",
+      highlights: [
+        { label: "Mode", value: "Read-only preview" },
+        { label: "Command", value: command },
+        { label: "Next", value: "Run ForgeX locally to broadcast and finalize." }
+      ]
+    };
+  }
+
+  if (normalized.startsWith("set value")) {
+    return {
+      title: "Write command staged",
+      copy: "Preview mode can stage the contract write, but it cannot sign or submit the transaction from Vercel.",
+      highlights: [
+        { label: "Mode", value: "Read-only preview" },
+        { label: "Command", value: command },
+        { label: "Next", value: "Use the local runtime to sign and send the write." }
+      ]
+    };
+  }
+
+  if (normalized.startsWith("get value")) {
+    return {
+      title: "Read flow previewed",
+      copy: "This shows the UX handoff only. Run the local ForgeX runtime to execute the actual read against the contract.",
+      highlights: [
+        { label: "Mode", value: "Read-only preview" },
+        { label: "Command", value: command },
+        { label: "Next", value: "Use the local runtime for live contract reads." }
+      ]
+    };
+  }
+
+  return {
+    title: "Command captured",
+    copy: "This deployment is a visual preview surface. Use the local ForgeX runtime to execute real commands, signer steps, and on-chain confirmation.",
+    highlights: [
+      { label: "Mode", value: "Read-only preview" },
+      { label: "Command", value: command },
+      { label: "Next", value: "Use the local runtime for live execution." }
+    ]
+  };
+}
+
 function updateReadinessPill(element, ready, degraded = false) {
   element.classList.toggle("ready", ready);
   element.classList.toggle("degraded", degraded);
@@ -187,52 +236,15 @@ async function bootstrap() {
     root: document.querySelector("#terminal"),
     initialState: DEFAULT_UI_STATE,
     devMode,
-    lockedLayout: previewMode,
+    previewMode,
     onCommand: async (command) => {
       if (previewMode) {
-        const previewResult = {
-          success: true,
-          mode: "preview",
-          phase: "prepared",
-          status: "prepared",
-          message: "Vercel preview mode. ForgeX local runtime is unavailable here.",
-          runId: `vercel_preview_${Date.now()}`,
-          command: null,
-          finalOutput: [
-            "ForgeX preview mode",
-            "",
-            "This deployment is a static preview surface.",
-            "Run ForgeX locally to execute real deploys, writes, and chain reconciliation.",
-            "",
-            `Command received: ${command}`
-          ].join("\n"),
-          nextActions: ["Main menu", "Show history"],
-          nextStep: "Run ForgeX locally to execute the real workflow.",
-          actions: {
-            canViewTransaction: false,
-            canOpenContract: false,
-            canOpenReadWrite: false,
-            canCopyAddress: false,
-            canCopyTransaction: false,
-            canCopyCommand: false,
-            canFinalizeDeploy: false,
-            canImportBroadcast: false
-          },
-          explorer: {
-            txUrl: null,
-            addressUrl: null
-          },
-          txHash: null,
-          contractAddress: null,
-          receipt: null,
-          warnings: ["Vercel preview mode is read-only."],
-          errors: []
-        };
-
-        terminal.renderResult(previewResult);
+        terminal.renderPreviewResult({
+          ...describePreviewCommand(command),
+          nextActions: ["Main menu", "Show history"]
+        });
         terminal.showLogs(false);
         terminal.setRuntimeStatus("Vercel Preview");
-        terminal.append("system", "Preview mode: local runtime and signer execution are disabled here.");
         terminal.focusInput();
         return;
       }
@@ -240,7 +252,6 @@ async function bootstrap() {
       const commandStartedAt = performance.now();
       let latestResult = null;
       const idempotencyKey = `cmd_${Date.now()}_${Math.random().toString(16).slice(2, 8)}`;
-      terminal.beginRun(command);
       window.__forgexPerf = {
         ...(window.__forgexPerf || {}),
         lastCommand: {
