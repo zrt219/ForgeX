@@ -50,7 +50,7 @@ export const UI_CONFIG = {
 };
 
 export const BACKGROUND_IDS = new Set(UI_CONFIG.backgrounds.map((entry) => entry.id));
-export const DEFAULT_BACKGROUND_ID = UI_CONFIG.backgrounds[0].id;
+export const DEFAULT_BACKGROUND_ID = "kunisada";
 
 export function resolveBackgroundId(candidate) {
   return BACKGROUND_IDS.has(candidate) ? candidate : DEFAULT_BACKGROUND_ID;

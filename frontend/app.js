@@ -41,9 +41,10 @@ function setTheme(themeId) {
   document.body.dataset.theme = themeId;
 }
 
-function renderSocialBar(container) {
+function renderSocialBar(container, previewMode = false) {
   container.innerHTML = "";
-  for (const social of UI_CONFIG.socials) {
+  const socials = previewMode ? UI_CONFIG.socials.slice(0, 4) : UI_CONFIG.socials;
+  for (const social of socials) {
     const link = document.createElement("a");
     link.className = "social-link";
     link.href = social.href;
@@ -108,48 +109,55 @@ function describePreviewCommand(command) {
   const normalized = command.trim().toLowerCase();
   if (normalized.startsWith("deploy")) {
     return {
-      title: "Deployment handoff prepared",
-      copy: "The preview captured the deploy flow, but signer execution and XRPL broadcast still need the local ForgeX runtime.",
-      highlights: [
-        { label: "Mode", value: "Read-only preview" },
-        { label: "Command", value: command },
-        { label: "Next", value: "Run ForgeX locally to broadcast and finalize." }
-      ]
+      heading: "Deploy preview",
+      finalOutput: [
+        "> deploy contract",
+        "",
+        "ForgeX deployment prepared.",
+        "Preview mode captured the handoff only.",
+        "Local signer execution is still required.",
+        "",
+        "Next step: run ForgeX locally to broadcast and finalize."
+      ].join("\n")
     };
   }
 
   if (normalized.startsWith("set value")) {
     return {
-      title: "Write command staged",
-      copy: "Preview mode can stage the contract write, but it cannot sign or submit the transaction from Vercel.",
-      highlights: [
-        { label: "Mode", value: "Read-only preview" },
-        { label: "Command", value: command },
-        { label: "Next", value: "Use the local runtime to sign and send the write." }
-      ]
+      heading: "Write preview",
+      finalOutput: [
+        `> ${command}`,
+        "",
+        "ForgeX write prepared.",
+        "Preview mode cannot sign or submit the transaction.",
+        "",
+        "Next step: use the local runtime to sign and send the write."
+      ].join("\n")
     };
   }
 
   if (normalized.startsWith("get value")) {
     return {
-      title: "Read flow previewed",
-      copy: "This shows the UX handoff only. Run the local ForgeX runtime to execute the actual read against the contract.",
-      highlights: [
-        { label: "Mode", value: "Read-only preview" },
-        { label: "Command", value: command },
-        { label: "Next", value: "Use the local runtime for live contract reads." }
-      ]
+      heading: "Read preview",
+      finalOutput: [
+        "> get value",
+        "",
+        "Read flow previewed.",
+        "This deployment shows the UX handoff only.",
+        "",
+        "Next step: run ForgeX locally for the live contract read."
+      ].join("\n")
     };
   }
 
   return {
-    title: "Command captured",
-    copy: "This deployment is a visual preview surface. Use the local ForgeX runtime to execute real commands, signer steps, and on-chain confirmation.",
-    highlights: [
-      { label: "Mode", value: "Read-only preview" },
-      { label: "Command", value: command },
-      { label: "Next", value: "Use the local runtime for live execution." }
-    ]
+    heading: "Preview mode",
+    finalOutput: [
+      `> ${command}`,
+      "",
+      "This deployment is a visual preview surface.",
+      "Use the local ForgeX runtime for live execution."
+    ].join("\n")
   };
 }
 
@@ -239,10 +247,7 @@ async function bootstrap() {
     previewMode,
     onCommand: async (command) => {
       if (previewMode) {
-        terminal.renderPreviewResult({
-          ...describePreviewCommand(command),
-          nextActions: ["Main menu", "Show history"]
-        });
+        terminal.renderPreviewResult({ ...describePreviewCommand(command), nextActions: ["Main menu", "Show history"] });
         terminal.showLogs(false);
         terminal.setRuntimeStatus("Vercel Preview");
         terminal.focusInput();
@@ -328,7 +333,7 @@ async function bootstrap() {
     terminal.setRuntimeStatus("Vercel Preview");
   }
 
-  renderSocialBar(document.querySelector("#top-social-bar"));
+  renderSocialBar(document.querySelector("#top-social-bar"), previewMode);
 
   let themeId = DEFAULT_UI_STATE.themeId;
   const syncBackgroundButtons = renderBackgroundControls(document.querySelector("#background-controls"), scene, () => themeId, (nextMode) => {

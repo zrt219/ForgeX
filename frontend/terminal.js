@@ -99,8 +99,8 @@ export class TerminalController {
 
   getDefaultPreviewSize() {
     return {
-      width: Math.min(540, Math.max(360, window.innerWidth - 40)),
-      height: Math.min(680, Math.max(500, window.innerHeight - 40))
+      width: Math.min(620, Math.max(420, window.innerWidth - 40)),
+      height: Math.min(520, Math.max(430, window.innerHeight - 40))
     };
   }
 
@@ -109,38 +109,38 @@ export class TerminalController {
     this.resultPanel.hidden = false;
     this.resultPanel.classList.add("preview-hero");
 
-    const hero = document.createElement("section");
-    hero.className = "preview-hero-card";
-
     const heading = document.createElement("div");
     heading.className = "result-heading";
-    heading.textContent = "ForgeX terminal";
-    hero.appendChild(heading);
+    heading.textContent = "ForgeX Main Menu";
+    this.resultPanel.appendChild(heading);
 
-    const title = document.createElement("div");
-    title.className = "preview-hero-title";
-    title.textContent = "Deploy a contract, set a message, and preview the execution handoff.";
-    hero.appendChild(title);
+    const block = document.createElement("pre");
+    block.className = "result-block";
+    block.textContent = [
+      "Deploy contract",
+      "Get value",
+      "Set value",
+      "Finalize deploy <forgexrunid> <txHash>",
+      "Import broadcast <forgexrunid>",
+      "Show history"
+    ].join("\n");
+    this.resultPanel.appendChild(block);
 
-    const copy = document.createElement("div");
-    copy.className = "preview-hero-copy";
-    copy.textContent =
-      "This deployment is a read-only presentation layer. Use the command dock below to step through the ForgeX flow without local signer access.";
-    hero.appendChild(copy);
+    const nextActions = document.createElement("section");
+    nextActions.className = "next-actions";
 
-    const actions = document.createElement("div");
-    actions.className = "action-row compact";
-    for (const label of ["deploy contract", "get value", "set value hello"]) {
-      actions.appendChild(
-        button(label, () => {
-          this.input.value = label;
-          this.focusInput();
-        }, "action-button secondary")
-      );
+    const nextHeading = document.createElement("div");
+    nextHeading.className = "result-heading";
+    nextHeading.textContent = "What next?";
+    nextActions.appendChild(nextHeading);
+
+    const row = document.createElement("div");
+    row.className = "action-row";
+    for (const label of ["Deploy again", "Show history"]) {
+      row.appendChild(button(label, () => void this.executeNextAction(label), "action-button"));
     }
-    hero.appendChild(actions);
-
-    this.resultPanel.appendChild(hero);
+    nextActions.appendChild(row);
+    this.resultPanel.appendChild(nextActions);
   }
 
   attachEvents() {
@@ -651,63 +651,29 @@ export class TerminalController {
     return container;
   }
 
-  renderPreviewResult({ title, copy, highlights = [], nextActions = [] }) {
+  renderPreviewResult({ heading = "Preview mode", finalOutput = "", nextActions = [] }) {
     this.clearResult();
     this.resultPanel.hidden = false;
     this.resultPanel.classList.add("preview-result");
 
-    const card = document.createElement("section");
-    card.className = "preview-result-card";
+    const label = document.createElement("div");
+    label.className = "result-heading";
+    label.textContent = heading;
+    this.resultPanel.appendChild(label);
 
-    const heading = document.createElement("div");
-    heading.className = "result-heading";
-    heading.textContent = "Preview handoff";
-    card.appendChild(heading);
-
-    const titleElement = document.createElement("div");
-    titleElement.className = "preview-result-title";
-    titleElement.textContent = title;
-    card.appendChild(titleElement);
-
-    const copyElement = document.createElement("div");
-    copyElement.className = "preview-result-copy";
-    copyElement.textContent = copy;
-    card.appendChild(copyElement);
-
-    if (highlights.length) {
-      const grid = document.createElement("div");
-      grid.className = "preview-summary-grid";
-
-      for (const item of highlights) {
-        const block = document.createElement("div");
-        block.className = "preview-summary-item";
-
-        const label = document.createElement("div");
-        label.className = "result-heading";
-        label.textContent = item.label;
-        block.appendChild(label);
-
-        const value = document.createElement("div");
-        value.className = "preview-summary-value";
-        value.textContent = item.value;
-        block.appendChild(value);
-
-        grid.appendChild(block);
-      }
-
-      card.appendChild(grid);
-    }
-
-    this.resultPanel.appendChild(card);
+    const block = document.createElement("pre");
+    block.className = "result-block";
+    block.textContent = finalOutput;
+    this.resultPanel.appendChild(block);
 
     if (nextActions.length) {
       const container = document.createElement("section");
       container.className = "next-actions";
 
-      const heading = document.createElement("div");
-      heading.className = "result-heading";
-      heading.textContent = "What next?";
-      container.appendChild(heading);
+      const nextLabel = document.createElement("div");
+      nextLabel.className = "result-heading";
+      nextLabel.textContent = "What next?";
+      container.appendChild(nextLabel);
 
       const row = document.createElement("div");
       row.className = "action-row";
