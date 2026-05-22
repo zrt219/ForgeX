@@ -10,6 +10,9 @@ The active architecture keeps the backend as orchestration and persistence, not 
 - Vercel preview: [forgexapp-zrt219s-projects.vercel.app](https://forgexapp-zrt219s-projects.vercel.app)
 - Contract explorer link: [ForgeXMessageVault `0x170d...7d57`](https://explorer.testnet.xrplevm.org/address/0x170d2207bf76e11179aa491f958f10767b697d57)
 
+<img width="2560" height="1279" alt="chrome_iqEpkkSmkz" src="https://github.com/user-attachments/assets/bb3caba4-bd3e-4193-a029-c442247e0f2c" />
+
+
 ## What This Is
 
 ForgeX is a local operator console for XRPL EVM deploys and writes. It is not a hosted relay and it is not a generic backend that forwards arbitrary contract calls. The active runtime is deliberately constrained: each command becomes a typed run, the runtime persists that run durably, and final state is only considered real after receipt verification and chain readback.
